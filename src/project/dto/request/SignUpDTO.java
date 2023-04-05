@@ -10,11 +10,12 @@ public class SignUpDTO {
     private String fullName;
     private Set<String> strRole = new HashSet<>();
 
-    public SignUpDTO(int id, String email, String password, String fullName) {
+    public SignUpDTO(int id, String email, String password, String fullName, Set<String> strRole) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.strRole = strRole;
     }
 
     public int getId() {

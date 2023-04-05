@@ -27,6 +27,13 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public User(int id, String email, String password, String fullName, Set<Role> role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+    }
+
     public int getId() {
         return id;
     }
@@ -89,5 +96,19 @@ public class User implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", role=" + role +
+                ", status=" + status +
+                '}';
     }
 }
