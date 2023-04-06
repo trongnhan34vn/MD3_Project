@@ -32,6 +32,8 @@ public class User implements Serializable {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.role = role;
+        this.status = true;
     }
 
     public int getId() {

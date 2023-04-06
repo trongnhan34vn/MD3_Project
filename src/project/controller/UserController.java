@@ -28,7 +28,9 @@ public class UserController {
             return new ResponseMessage("Email is existed!");
         }
         Set<String> strRole = sign.getStrRole();
+
         Set<Role> roleSet = new HashSet<>();
+
         strRole.forEach(role -> {
             switch (role) {
                 case "admin":
@@ -51,6 +53,7 @@ public class UserController {
 
     public ResponseMessage login(SignInDTO signInDTO) {
         if (userService.checkLogin(signInDTO.getEmail(), signInDTO.getPassword())) {
+            getCurrentUser();
             return new ResponseMessage("Login Success!");
         } else {
             return new ResponseMessage("Login Faild!");
@@ -59,5 +62,13 @@ public class UserController {
 
     public User getCurrentUser() {
         return userService.getCurrentUser();
+    }
+
+    public boolean changeUserStatus(int id) {
+        return userService.changeUserStatus(id);
+    }
+
+    public List<User> searchByName (String search) {
+        return userService.searchUserName(search);
     }
 }

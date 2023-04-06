@@ -1,6 +1,8 @@
 package project.model;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable {
     private int id;
     private RoleName RoleName;
 
@@ -26,5 +28,13 @@ public class Role {
 
     public void setRoleName(RoleName roleName) {
         RoleName = roleName;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", RoleName=" + RoleName +
+                '}';
     }
 }

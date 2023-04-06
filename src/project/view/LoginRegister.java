@@ -2,13 +2,16 @@ package project.view;
 
 import project.config.Config;
 import project.controller.UserController;
+import project.data.Path;
 import project.dto.request.SignInDTO;
 import project.dto.request.SignUpDTO;
 import project.dto.response.ResponseMessage;
 import project.model.Role;
 import project.model.RoleName;
 import project.model.User;
+import project.view.admin.AdminView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +20,14 @@ public class LoginRegister {
     UserController userController = new UserController();
     List<User> listUsers = userController.getAllUser();
     User currentUser = userController.getCurrentUser();
+    List<Role> listRoles;
+
+    {
+        if (currentUser != null) {
+            listRoles = new ArrayList<>(currentUser.getRole());
+        }
+    }
+
     public LoginRegister() {
         System.out.println("-------------------------- Login & Register --------------------------");
         System.out.println("1. Login");
@@ -41,6 +52,7 @@ public class LoginRegister {
     }
 
     public void login() {
+        System.out.println("-------------------------- Login --------------------------");
         System.out.println("Enter your email: ");
         String email = Config.scanner().nextLine();
         System.out.println("Enter your password: ");
@@ -50,8 +62,15 @@ public class LoginRegister {
         ResponseMessage responseMessage = userController.login(signInDTO);
 //        Nếu phản hồi là Login Succ -> Login suc
         if (responseMessage.getMessage().equals("Login Success!")) {
+            currentUser = userController.getCurrentUser();
+            listRoles = new ArrayList<>(currentUser.getRole());
             System.out.println("Login Success!");
-            System.out.println(currentUser.getRole());
+            if (listRoles.get(0).getRoleName().equals(RoleName.ADMIN)) {
+//               chuyển trang Admin
+                new AdminView();
+            } else {
+//                chuyển trang User
+            }
         } else {
             System.err.println("Login Failed! Please try again!");
             System.out.println("1. Try Again!");
@@ -69,7 +88,8 @@ public class LoginRegister {
         }
     }
 
-    public SignUpDTO inputRegister() {
+    public void register() {
+        System.out.println("-------------------------- Register --------------------------");
         int id;
         if (listUsers.isEmpty()) {
             id = 1;
@@ -86,12 +106,9 @@ public class LoginRegister {
         Set<String> roleSet = new HashSet<>();
         String role = "user";
         roleSet.add(role);
+        SignUpDTO signUpDTO =  new SignUpDTO(id, email, password, fullName, roleSet);
 
-        return new SignUpDTO(id, email, password, fullName, roleSet);
-    }
-
-    public void register() {
-        ResponseMessage responseMessage = userController.register(inputRegister());
+        ResponseMessage responseMessage = userController.register(signUpDTO);
         if (responseMessage.getMessage().equals("Email is existed!")) {
             System.err.println("Email is existed! Please try again");
             System.out.println("1. Try Again!");

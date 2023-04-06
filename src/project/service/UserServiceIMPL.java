@@ -13,16 +13,19 @@ import java.util.Set;
 
 public class UserServiceIMPL implements IUserService {
     List<User> listUsers = new Config<User>().readFromFile(Path.USER_PATH);
-    List<User> listCurrentUsers = new Config<User>().readFromFile(Path.USER_LOGIN_PATH);
-    User currentUser = new User();
 
     {
         Role role = new Role(2, RoleName.ADMIN);
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(role);
-        listUsers.add(new User(0, "admin@gmail.com", "pikachu123", "admin", roleSet));
-        if (!listCurrentUsers.isEmpty()) {
-            currentUser = listCurrentUsers.get(0);
+        boolean isCheck = false;
+        for (User user: listUsers) {
+            if (user.getId() == 0 || user.getEmail().equalsIgnoreCase("admin@gmail.com")) {
+                isCheck = true;
+            }
+        }
+        if (!isCheck) {
+            listUsers.add(new User(0, "admin@gmail.com", "pikachu123", "admin", roleSet));
         }
     }
 
@@ -81,6 +84,32 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public User getCurrentUser() {
-        return currentUser;
+        User currentUser;
+        List<User> listCurrentUsers = new Config<User>().readFromFile(Path.USER_LOGIN_PATH);
+        if (listCurrentUsers.size() > 0) {
+            currentUser = listCurrentUsers.get(0);
+            return currentUser;
+        }
+        return null;
     }
+
+    @Override
+    public boolean changeUserStatus(int id) {
+        for (User user: listUsers) {
+            if (user.getId() == id) {
+                user.setStatus(!user.isStatus());
+                new Config<User>().writeToFile(listUsers, Path.USER_PATH);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<User> searchUserName(String search) {
+        List<User> searchList = new ArrayList<>(listUsers);
+        searchList.removeIf(user -> !user.getFullName().toLowerCase().contains(search));
+        return searchList;
+    }
+
 }

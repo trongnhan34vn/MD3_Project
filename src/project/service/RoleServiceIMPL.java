@@ -22,7 +22,7 @@ public class RoleServiceIMPL implements IRoleService {
 
     @Override
     public Role findByName(RoleName name) {
-        for (Role role: listRoles) {
+        for (Role role : listRoles) {
             if (role.getRoleName() == name) {
                 return role;
             }

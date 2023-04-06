@@ -24,7 +24,7 @@ public class Config<E> {
         } catch (FileNotFoundException f) {
             System.err.println("File Not Found!");
         } catch (IOException i) {
-            System.err.println("IOException!");
+            i.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
@@ -54,7 +54,7 @@ public class Config<E> {
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(list);
         } catch (IOException i) {
-            System.err.println("IOException!");
+            i.printStackTrace();
         } finally {
             try {
                 if (fileOutputStream != null) {
