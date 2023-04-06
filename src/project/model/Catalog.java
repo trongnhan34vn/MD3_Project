@@ -11,6 +11,9 @@ public class Catalog implements Serializable {
         this.catalogName = catalogName;
     }
 
+    public Catalog() {
+    }
+
     public int getCatalogId() {
         return catalogId;
     }

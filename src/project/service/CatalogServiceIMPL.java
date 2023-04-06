@@ -4,10 +4,12 @@ import project.config.Config;
 import project.data.Path;
 import project.model.Catalog;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogServiceIMPL implements ICatalogService{
+public class CatalogServiceIMPL implements ICatalogService {
     List<Catalog> listCatalogs = new Config<Catalog>().readFromFile(Path.CATALOG_PATH);
+
     @Override
     public List<Catalog> findAll() {
         return listCatalogs;
@@ -15,25 +17,34 @@ public class CatalogServiceIMPL implements ICatalogService{
 
     @Override
     public void save(Catalog catalog) {
-        listCatalogs.add(catalog);
+        if (findById(catalog.getCatalogId()) == null) {
+            listCatalogs.add(catalog);
+        } else {
+            listCatalogs.set(listCatalogs.indexOf(catalog), catalog);
+        }
+        new Config<Catalog>().writeToFile(listCatalogs, Path.CATALOG_PATH);
     }
 
     @Override
     public Catalog findById(int id) {
-        for (Catalog catalog: listCatalogs) {
+        for (Catalog catalog : listCatalogs) {
             if (catalog.getCatalogId() == id) {
                 return catalog;
             }
-        };
+        }
         return null;
     }
 
     @Override
     public void deleteById(int id) {
-        for (Catalog catalog: listCatalogs) {
-            if (catalog.getCatalogId() == id) {
-                listCatalogs.remove(catalog);
-            }
-        }
+        listCatalogs.removeIf(catalog -> catalog.getCatalogId() == id);
+        new Config<Catalog>().writeToFile(listCatalogs,Path.CATALOG_PATH);
+    }
+
+    @Override
+    public List<Catalog> searchByName(String search) {
+        List<Catalog> searchList = new ArrayList<>(listCatalogs);
+        searchList.removeIf(catalog -> catalog.getCatalogName().toLowerCase().trim().contains(search.toLowerCase().trim()));
+        return searchList;
     }
 }

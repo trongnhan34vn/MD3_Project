@@ -15,7 +15,7 @@ public class AdminView {
         int choice = Integer.parseInt(Config.scanner().nextLine());
         switch (choice) {
             case 1:
-
+                new CatalogManagement();
                 break;
             case 2:
                 break;

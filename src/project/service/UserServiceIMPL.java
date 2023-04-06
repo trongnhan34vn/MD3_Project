@@ -52,11 +52,7 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public void deleteById(int id) {
-        for (User user : listUsers) {
-            if (user.getId() == id) {
-                listUsers.remove(user);
-            }
-        }
+        listUsers.removeIf(user -> user.getId() == id);
     }
 
     @Override

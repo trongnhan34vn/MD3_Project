@@ -51,7 +51,7 @@ public class UserManagement {
     }
 
     public void showListUsers(List<User> listUsers) {
-        System.out.println("LIST USERS: ");
+        System.out.println("--------------- Users ---------------");
         for (User user : listUsers) {
             System.out.println("-------------------------------------------");
             System.out.println("UserId: " + user.getId());
@@ -62,7 +62,7 @@ public class UserManagement {
             System.out.println("Status: " + (user.isStatus() ? "Active" : "Block"));
             System.out.println("Role: " + user.getRole());
         }
-        System.out.println("-------------------------------------------");
+        System.out.println("--------------- Users ---------------");
     }
 
     public void changeUserStatus() {
