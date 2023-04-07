@@ -4,8 +4,8 @@ import project.dto.request.ProductDTO;
 import project.dto.response.ResponseMessage;
 import project.model.Catalog;
 import project.model.Product;
-import project.service.IProductService;
-import project.service.ProductServiceIMPL;
+import project.service.product.IProductService;
+import project.service.product.ProductServiceIMPL;
 
 import java.util.List;
 
@@ -35,5 +35,17 @@ public class ProductController {
 
     public void updateProduct(Product product) {
         productService.save(product);
+    }
+
+    public void deleteProduct(int id) {
+        productService.deleteById(id);
+    }
+
+    public List<Product> searchProductByName(String search) {
+        return productService.searchProductByName(search);
+    }
+
+    public List<Product> searchProductByCatalog(String catalogName) {
+        return productService.searchProductByCatalog(catalogName);
     }
 }

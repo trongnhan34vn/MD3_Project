@@ -1,4 +1,4 @@
-package project.service;
+package project.service.user;
 
 import project.config.Config;
 import project.data.Path;

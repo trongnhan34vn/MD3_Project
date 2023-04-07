@@ -18,7 +18,7 @@ public class Product implements Serializable {
         this.catalog = catalog;
         this.quantity = quantity;
         this.price = price;
-        this.productStatus = productStatus;
+        this.productStatus = true;
     }
 
     public Product(int productId, String productName, Catalog catalog, int quantity, float price) {
@@ -27,6 +27,7 @@ public class Product implements Serializable {
         this.catalog = catalog;
         this.quantity = quantity;
         this.price = price;
+        this.productStatus = true;
     }
 
     public Product() {

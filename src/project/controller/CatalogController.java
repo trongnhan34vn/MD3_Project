@@ -1,8 +1,8 @@
 package project.controller;
 
 import project.model.Catalog;
-import project.service.CatalogServiceIMPL;
-import project.service.ICatalogService;
+import project.service.catalog.CatalogServiceIMPL;
+import project.service.catalog.ICatalogService;
 
 import java.util.List;
 
@@ -30,6 +30,6 @@ public class CatalogController {
     }
 
     public List<Catalog> searchByName(String search) {
-        return searchByName(search);
+        return catalogService.searchByName(search);
     }
 }

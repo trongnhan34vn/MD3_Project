@@ -10,6 +10,7 @@ import project.model.Role;
 import project.model.RoleName;
 import project.model.User;
 import project.view.admin.AdminView;
+import project.view.user.UserView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,7 +70,24 @@ public class LoginRegister {
 //               chuyển trang Admin
                 new AdminView();
             } else {
+                if (currentUser.isStatus()) {
 //                chuyển trang User
+                    new UserView();
+                } else {
+                    System.err.println("Your Account has been blocked!");
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    while (true) {
+                        System.out.println("Enter 'back' to back to HomePage: ");
+                        String back = Config.scanner().nextLine();
+                        if (back.equalsIgnoreCase("back")) {
+                            new HomePage();
+                        }
+                    }
+                }
             }
         } else {
             System.err.println("Login Failed! Please try again!");

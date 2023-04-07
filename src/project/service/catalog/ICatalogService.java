@@ -1,6 +1,7 @@
-package project.service;
+package project.service.catalog;
 
 import project.model.Catalog;
+import project.service.IGenericService;
 
 import java.util.List;
 

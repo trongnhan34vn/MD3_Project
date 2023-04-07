@@ -18,6 +18,7 @@ public class AdminView {
                 new CatalogManagement();
                 break;
             case 2:
+                new ProductsManagement();
                 break;
             case 3:
                 new UserManagement();

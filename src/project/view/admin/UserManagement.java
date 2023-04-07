@@ -79,10 +79,12 @@ public class UserManagement {
     }
 
     public void backToMenu() {
-        System.out.println("Enter 'back' to back to menu: ");
-        String back = Config.scanner().nextLine();
-        if (back.equalsIgnoreCase("back")) {
-            new UserManagement();
+        while(true) {
+            System.out.println("Enter 'back' to back to menu: ");
+            String back = Config.scanner().nextLine();
+            if (back.equalsIgnoreCase("back")) {
+                new UserManagement();
+            }
         }
     }
 }

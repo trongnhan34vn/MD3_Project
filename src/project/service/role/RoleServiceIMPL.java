@@ -1,4 +1,4 @@
-package project.service;
+package project.service.role;
 
 import project.model.Role;
 import project.model.RoleName;

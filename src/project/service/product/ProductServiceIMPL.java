@@ -1,10 +1,11 @@
-package project.service;
+package project.service.product;
 
 import project.config.Config;
 import project.data.Path;
 import project.model.Catalog;
 import project.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductServiceIMPL implements IProductService {
@@ -23,7 +24,7 @@ public class ProductServiceIMPL implements IProductService {
             listProducts.add(product);
 
         } else {
-            listProducts.set(listProducts.indexOf(product), product);
+            listProducts.set(listProducts.indexOf(findById(product.getProductId())), product);
         }
         new Config<Product>().writeToFile(listProducts, Path.PRODUCT_PATH);
     }
@@ -43,6 +44,12 @@ public class ProductServiceIMPL implements IProductService {
         listProducts.removeIf(product -> product.getProductId() == id);
         new Config<Product>().writeToFile(listProducts, Path.PRODUCT_PATH);
     }
+    @Override
+    public List<Product> searchProductByName(String search) {
+        List<Product> searchList = new ArrayList<>(listProducts);
+        searchList.removeIf(product -> !product.getProductName().trim().toLowerCase().contains(search.trim().toLowerCase()));
+        return searchList;
+    }
 
     @Override
     public List<Catalog> getAllCatalogs() {
@@ -57,5 +64,12 @@ public class ProductServiceIMPL implements IProductService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Product> searchProductByCatalog(String catalogName) {
+        List<Product> searchList = new ArrayList<>(listProducts);
+        searchList.removeIf(product -> !product.getCatalog().getCatalogName().equals(catalogName));
+        return searchList;
     }
 }

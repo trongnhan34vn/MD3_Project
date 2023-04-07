@@ -6,10 +6,10 @@ import project.dto.response.ResponseMessage;
 import project.model.Role;
 import project.model.RoleName;
 import project.model.User;
-import project.service.IRoleService;
-import project.service.IUserService;
-import project.service.RoleServiceIMPL;
-import project.service.UserServiceIMPL;
+import project.service.role.IRoleService;
+import project.service.user.IUserService;
+import project.service.role.RoleServiceIMPL;
+import project.service.user.UserServiceIMPL;
 
 import java.util.HashSet;
 import java.util.List;

@@ -42,18 +42,6 @@ public class CatalogManagement {
         }
     }
 
-    public void showListCatalog(List<Catalog> list) {
-        System.out.println("--------------- Catalogs ---------------");
-        for (Catalog catalog: list) {
-            System.out.println("----------------------------------");
-            System.out.println("Catalog ID: " + catalog.getCatalogId());
-            System.out.println("Catalog Name: " + catalog.getCatalogName());
-            System.out.println("----------------------------------");
-        }
-        System.out.println("--------------- Catalogs ---------------");
-        backToMenu();
-    }
-
     public void createCatalog() {
         System.out.println("Enter the catalog number: ");
         int mountCata = Integer.parseInt(Config.scanner().nextLine());
@@ -75,6 +63,7 @@ public class CatalogManagement {
     }
 
     public void updateCatalog() {
+        showListCatalog(listCatalogs);
         System.out.println("Enter Id Catalog: ");
         int idCata = Integer.parseInt(Config.scanner().nextLine());
         Catalog updateCata = catalogController.findById(idCata);
@@ -102,6 +91,7 @@ public class CatalogManagement {
     }
 
     public void deleteCatalog() {
+        showListCatalog(listCatalogs);
         System.out.println("Enter Id to delete: ");
         int idCata = Integer.parseInt(Config.scanner().nextLine());
         Catalog deleteCata = catalogController.findById(idCata);
@@ -126,6 +116,7 @@ public class CatalogManagement {
     }
 
     public void searchCatalogByName() {
+        showListCatalog(listCatalogs);
         System.out.println("Search: ");
         String search = Config.scanner().nextLine();
         List<Catalog> searchList = catalogController.searchByName(search);
@@ -149,10 +140,23 @@ public class CatalogManagement {
     }
 
     public void backToMenu() {
-        System.out.println("Enter 'back' to back to menu: ");
-        String back = Config.scanner().nextLine();
-        if (back.equalsIgnoreCase("back")) {
-            new CatalogManagement();
+        while(true) {
+            System.out.println("Enter 'back' to back to menu: ");
+            String back = Config.scanner().nextLine();
+            if (back.equalsIgnoreCase("back")) {
+                new CatalogManagement();
+            }
         }
+    }
+
+    public void showListCatalog(List<Catalog> list) {
+        System.out.println("--------------- Catalogs ---------------");
+        for (Catalog catalog: list) {
+            System.out.println("----------------------------------");
+            System.out.println("Catalog ID: " + catalog.getCatalogId());
+            System.out.println("Catalog Name: " + catalog.getCatalogName());
+            System.out.println("----------------------------------");
+        }
+        System.out.println("--------------- Catalogs ---------------");
     }
 }

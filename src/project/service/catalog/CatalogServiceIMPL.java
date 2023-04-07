@@ -1,4 +1,4 @@
-package project.service;
+package project.service.catalog;
 
 import project.config.Config;
 import project.data.Path;
@@ -20,7 +20,7 @@ public class CatalogServiceIMPL implements ICatalogService {
         if (findById(catalog.getCatalogId()) == null) {
             listCatalogs.add(catalog);
         } else {
-            listCatalogs.set(listCatalogs.indexOf(catalog), catalog);
+            listCatalogs.set(listCatalogs.indexOf(findById(catalog.getCatalogId())), catalog);
         }
         new Config<Catalog>().writeToFile(listCatalogs, Path.CATALOG_PATH);
     }
@@ -44,7 +44,7 @@ public class CatalogServiceIMPL implements ICatalogService {
     @Override
     public List<Catalog> searchByName(String search) {
         List<Catalog> searchList = new ArrayList<>(listCatalogs);
-        searchList.removeIf(catalog -> catalog.getCatalogName().toLowerCase().trim().contains(search.toLowerCase().trim()));
+        searchList.removeIf(catalog -> !catalog.getCatalogName().toLowerCase().trim().contains(search.toLowerCase().trim()));
         return searchList;
     }
 }
