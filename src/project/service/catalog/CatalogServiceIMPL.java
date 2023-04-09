@@ -2,7 +2,7 @@ package project.service.catalog;
 
 import project.config.Config;
 import project.data.Path;
-import project.model.Catalog;
+import project.model.product.Catalog;
 
 import java.util.ArrayList;
 import java.util.List;

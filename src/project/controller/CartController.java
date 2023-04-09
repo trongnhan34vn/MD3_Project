@@ -1,7 +1,7 @@
 package project.controller;
 
-import project.model.Cart;
-import project.model.CartItem;
+import project.model.cart.Cart;
+import project.model.cart.CartItem;
 import project.service.cart.CartServiceIMPL;
 import project.service.cart.ICartService;
 
@@ -19,5 +19,25 @@ public class CartController {
 
     public Cart getCurrentUserCart() {
         return cartService.getCurrentUserCart();
+    }
+
+    public Cart findById(int id) {
+        return cartService.findById(id);
+    }
+
+    public CartItem findCartItemById(int id) {
+        return cartService.findCartItemById(id);
+    }
+
+    public boolean changeQuantityCartItem (CartItem cartItem) {
+        return cartService.changeQuantityCartItem(cartItem);
+    }
+
+    public boolean removeCartItemById (int id) {
+        return cartService.removeCartItemById(id);
+    }
+
+    public float getTotal(List<CartItem> list) {
+        return cartService.getTotal(list);
     }
 }

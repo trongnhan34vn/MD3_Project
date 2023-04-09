@@ -1,7 +1,7 @@
 package project.service.role;
 
-import project.model.Role;
-import project.model.RoleName;
+import project.model.user.Role;
+import project.model.user.RoleName;
 
 import java.util.ArrayList;
 import java.util.List;

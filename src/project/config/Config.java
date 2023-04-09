@@ -23,10 +23,8 @@ public class Config<E> {
             }
         } catch (FileNotFoundException f) {
             System.err.println("File Not Found!");
-        } catch (IOException i) {
+        } catch (IOException | ClassNotFoundException i) {
             i.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         } finally {
             try {
                 if (fileInputStream != null) {

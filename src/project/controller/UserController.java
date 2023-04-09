@@ -3,9 +3,9 @@ package project.controller;
 import project.dto.request.SignInDTO;
 import project.dto.request.SignUpDTO;
 import project.dto.response.ResponseMessage;
-import project.model.Role;
-import project.model.RoleName;
-import project.model.User;
+import project.model.user.Role;
+import project.model.user.RoleName;
+import project.model.user.User;
 import project.service.role.IRoleService;
 import project.service.user.IUserService;
 import project.service.role.RoleServiceIMPL;
@@ -70,5 +70,9 @@ public class UserController {
 
     public List<User> searchByName (String search) {
         return userService.searchUserName(search);
+    }
+
+    public void updateInfo(User user) {
+        userService.save(user);
     }
 }

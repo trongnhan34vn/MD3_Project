@@ -1,6 +1,6 @@
 package project.controller;
 
-import project.model.Catalog;
+import project.model.product.Catalog;
 import project.service.catalog.CatalogServiceIMPL;
 import project.service.catalog.ICatalogService;
 

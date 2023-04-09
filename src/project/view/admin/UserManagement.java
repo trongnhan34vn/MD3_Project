@@ -2,8 +2,7 @@ package project.view.admin;
 
 import project.config.Config;
 import project.controller.UserController;
-import project.model.User;
-import project.view.LoginRegister;
+import project.model.user.User;
 
 import java.util.List;
 

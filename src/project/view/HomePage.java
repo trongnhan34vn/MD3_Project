@@ -1,8 +1,6 @@
 package project.view;
 
 import project.config.Config;
-import project.controller.UserController;
-import project.model.User;
 
 public class HomePage {
     public HomePage() {

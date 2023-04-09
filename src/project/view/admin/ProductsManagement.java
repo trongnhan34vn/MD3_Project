@@ -3,8 +3,8 @@ package project.view.admin;
 import project.config.Config;
 import project.controller.ProductController;
 import project.dto.request.ProductDTO;
-import project.model.Catalog;
-import project.model.Product;
+import project.model.product.Catalog;
+import project.model.product.Product;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package project.service.product;
 
 import project.config.Config;
 import project.data.Path;
-import project.model.Catalog;
-import project.model.Product;
+import project.model.product.Catalog;
+import project.model.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;

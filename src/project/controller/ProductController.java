@@ -2,8 +2,8 @@ package project.controller;
 
 import project.dto.request.ProductDTO;
 import project.dto.response.ResponseMessage;
-import project.model.Catalog;
-import project.model.Product;
+import project.model.product.Catalog;
+import project.model.product.Product;
 import project.service.product.IProductService;
 import project.service.product.ProductServiceIMPL;
 

@@ -1,4 +1,4 @@
-package project.model;
+package project.model.user;
 
 import java.io.Serializable;
 import java.util.Set;

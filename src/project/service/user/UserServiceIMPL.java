@@ -2,9 +2,9 @@ package project.service.user;
 
 import project.config.Config;
 import project.data.Path;
-import project.model.Role;
-import project.model.RoleName;
-import project.model.User;
+import project.model.user.Role;
+import project.model.user.RoleName;
+import project.model.user.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +36,11 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public void save(User user) {
-        listUsers.add(user);
+        if (findById(user.getId()) == null) {
+            listUsers.add(user);
+        } else {
+            listUsers.set(listUsers.indexOf(findById(user.getId())),user);
+        }
         new Config<User>().writeToFile(listUsers, Path.USER_PATH);
     }
 

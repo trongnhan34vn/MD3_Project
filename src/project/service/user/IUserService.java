@@ -1,11 +1,9 @@
 package project.service.user;
 
-import project.model.Role;
-import project.model.User;
+import project.model.user.User;
 import project.service.IGenericService;
 
 import java.util.List;
-import java.util.Set;
 
 public interface IUserService extends IGenericService<User> {
     boolean existByEmail(String email);

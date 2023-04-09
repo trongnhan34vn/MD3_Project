@@ -2,13 +2,12 @@ package project.view;
 
 import project.config.Config;
 import project.controller.UserController;
-import project.data.Path;
 import project.dto.request.SignInDTO;
 import project.dto.request.SignUpDTO;
 import project.dto.response.ResponseMessage;
-import project.model.Role;
-import project.model.RoleName;
-import project.model.User;
+import project.model.user.Role;
+import project.model.user.RoleName;
+import project.model.user.User;
 import project.view.admin.AdminView;
 import project.view.user.UserView;
 

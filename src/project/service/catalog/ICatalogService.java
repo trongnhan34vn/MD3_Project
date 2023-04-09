@@ -1,6 +1,6 @@
 package project.service.catalog;
 
-import project.model.Catalog;
+import project.model.product.Catalog;
 import project.service.IGenericService;
 
 import java.util.List;

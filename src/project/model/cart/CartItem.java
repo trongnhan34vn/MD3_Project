@@ -1,10 +1,20 @@
-package project.model;
+package project.model.cart;
+
+import project.model.product.Product;
 
 import java.io.Serializable;
 
 public class CartItem implements Serializable {
     private Product product;
     private int quantity;
+
+    public CartItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public CartItem() {
+    }
 
     public Product getProduct() {
         return product;
@@ -22,8 +32,11 @@ public class CartItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public CartItem(Product product, int quantity) {
-        this.product = product;
-        this.quantity = quantity;
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                '}';
     }
 }

@@ -1,6 +1,6 @@
 package project.dto.request;
 
-import project.model.Catalog;
+import project.model.product.Catalog;
 
 public class ProductDTO {
     private int productId;

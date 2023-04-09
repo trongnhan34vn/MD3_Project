@@ -1,14 +1,16 @@
 package project.view.user;
 
 import project.config.Config;
-import project.controller.CartController;
-import project.controller.CatalogController;
-import project.controller.ProductController;
-import project.controller.UserController;
-import project.model.*;
 
+import project.controller.*;
+import project.model.cart.Cart;
+import project.model.cart.CartItem;
+import project.model.invoice.Invoice;
+import project.model.invoice.InvoiceItem;
+import project.model.product.Catalog;
+import project.model.product.Product;
+import project.model.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserView {
@@ -16,6 +18,11 @@ public class UserView {
     ProductController productController = new ProductController();
     CartController cartController = new CartController();
     List<Catalog> listCatalogs = catalogController.getAllCatalogs();
+    UserController userController = new UserController();
+    User currentUser = userController.getCurrentUser();
+    InvoiceController invoiceController = new InvoiceController();
+    Cart copyCart = cartController.getCurrentUserCart();
+
 
     public UserView() {
         System.out.println("-------------------------- GUITAR PLUS --------------------------");
@@ -23,8 +30,9 @@ public class UserView {
         System.out.println("2. Search Products By Name");
         System.out.println("3. Add to Cart");
         System.out.println("4. Show Cart");
-        System.out.println("5. Payment");
-        System.out.println("6. Log Out");
+        System.out.println("5. Invoice");
+        System.out.println("6. Account");
+        System.out.println("7. Log Out");
         System.out.println("-------------------------- GUITAR PLUS --------------------------");
         System.out.println("Enter your choice: ");
         int choice = Integer.parseInt(Config.scanner().nextLine());
@@ -44,8 +52,12 @@ public class UserView {
                 backToMenu();
                 break;
             case 5:
+                showInvoice();
                 break;
             case 6:
+                showInfoUser(currentUser);
+                break;
+            case 7:
                 break;
         }
     }
@@ -102,47 +114,243 @@ public class UserView {
 
     public void addToCart() {
         showListProducts();
-        System.out.println("Enter Id product want to add to cart: ");
-        int idProduct = Integer.parseInt(Config.scanner().nextLine());
-        Product productSelect = productController.findById(idProduct);
-        if (productSelect == null) {
-            System.err.println("Id Not Found! Please try again!");
-            System.out.println("1. Try Again!");
+        System.out.println("Enter product ID to add to cart: ");
+        int productId = Integer.parseInt(Config.scanner().nextLine());
+        Product selectProduct = productController.findById(productId);
+        if (selectProduct == null) {
+            System.err.println("ID Not Found!");
+            System.out.println("1. Try Again");
             System.out.println("2. Back to Menu");
-            System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(Config.scanner().nextLine());
             switch (choice) {
                 case 1:
                     addToCart();
                     break;
                 case 2:
-                    backToMenu();
+                    new UserView();
                     break;
             }
-        }
-        System.out.println("Enter the quantity: ");
-        int quantity = Integer.parseInt(Config.scanner().nextLine());
-        CartItem cartItem = new CartItem(productSelect, quantity);
-        if (cartController.addToCart(cartItem)) {
-            System.out.println("Add to Cart Success!");
         } else {
-            System.out.println("Add to Cart Failed!");
+            System.out.println("Enter quantity: ");
+            int quantity = Integer.parseInt(Config.scanner().nextLine());
+            CartItem cartItem = new CartItem(selectProduct, quantity);
+            if (cartController.addToCart(cartItem)) {
+                System.out.println("Add to Cart Success!");
+            }
+            System.out.println("1. Continue add to cart");
+            System.out.println("2. Back to Menu");
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    addToCart();
+                    break;
+                case 2:
+                    new UserView();
+                    break;
+                default:
+                    System.err.println("Invalid Requirement!");
+            }
         }
-        backToMenu();
+    }
+
+    public void displayCart(Cart cart) {
+        System.out.println("---------------- Shopping Cart ----------------");
+        if (cart != null) {
+            for (CartItem cartItem : cart.getCartItems()) {
+                showProduct(cartItem.getProduct());
+                System.out.println("Quantity: " + cartItem.getQuantity());
+                System.out.println(" ");
+            }
+            System.out.println("Total: " + cartController.getTotal(cart.getCartItems()));
+        }
+        System.out.println("---------------- Shopping Cart ----------------");
     }
 
     public void showCart() {
-        Cart currentUserCart = cartController.getCurrentUserCart();
-        System.out.println("---------------- Shopping Cart ----------------");
-        for (CartItem cartItem : currentUserCart.getListCartItem()) {
-            showProduct(cartItem.getProduct());
-            System.out.println("Quantity: " + cartItem.getQuantity());
-            System.out.println(" ");
+        Cart currentCart = cartController.getCurrentUserCart();
+        displayCart(currentCart);
+        System.out.println("1. Add more product to cart ");
+        System.out.println("2. Change product quantity");
+        System.out.println("3. Remove product from cart");
+        System.out.println("4. Payment");
+        System.out.println("5. Back to Menu");
+        System.out.println("Enter your choice: ");
+        int choice = Integer.parseInt(Config.scanner().nextLine());
+        switch (choice) {
+            case 1:
+                addToCart();
+                break;
+            case 2:
+                changeProductQuantity();
+                break;
+            case 3:
+                removeProductFromCart();
+                break;
+            case 4:
+                paidInvoice();
+                break;
+            case 5:
+                new UserView();
+                break;
+            default:
+                System.err.println("Invalid Requirement!");
         }
-        System.out.println("---------------- Shopping Cart ----------------");
+    }
+
+    public void changeProductQuantity() {
+        if (cartController.getCurrentUserCart() != null) {
+            //        nhập sản phẩm muốn thay đổi
+            System.out.println("Enter product Id to change quantity: ");
+            int idProduct = Integer.parseInt(Config.scanner().nextLine());
+            if (idProduct <= 0) {
+                System.err.println("Invalid Requirement!");
+                changeProductQuantity();
+            }
+//        Kiểm tra cartItem có tồn tại trong giỏ hàng không findByID
+            CartItem selectCartItem = cartController.findCartItemById(idProduct);
+            if (selectCartItem == null) {
+                idNotFound();
+            } else {
+                System.out.println("Enter quantity: ");
+                int quantity = Integer.parseInt(Config.scanner().nextLine());
+//            set lại cartItem
+                selectCartItem.setQuantity(quantity);
+                if (cartController.changeQuantityCartItem(selectCartItem)) {
+                    System.out.println("Change Quantity Success!");
+                }
+                backToMenu();
+            }
+        } else {
+            System.err.println("Cart is empty! Please add product to cart!");
+            backToMenu();
+        }
+    }
+
+    public void removeProductFromCart() {
+        if (cartController.getCurrentUserCart() != null) {
+            //        nhập
+            System.out.println("Enter product Id to remove:");
+            int idProduct = Integer.parseInt(Config.scanner().nextLine());
+            if (cartController.removeCartItemById(idProduct)) {
+                System.out.println("Remove Item Success!");
+                backToMenu();
+            } else {
+                idNotFound();
+            }
+        } else {
+            System.err.println("Cart is empty! Please add product to cart!");
+            backToMenu();
+        }
+    }
+
+    public void displayUser(User user) {
+        System.out.println("-------------- User --------------");
+        System.out.println("Name: " + user.getFullName());
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Address: " + user.getAddress());
+        System.out.println("Phone: " + user.getPhoneNumber());
+        System.out.println("-------------- User --------------");
+    }
+
+    public void showInvoice() {
+//        In ra hoá đơn (thông tin user, thông tin sản phẩm)
+        System.out.println("----------------- Invoice -----------------");
+        Invoice currentInvoice = invoiceController.findById(currentUser.getId());
+        if (currentInvoice != null) {
+            displayUser(currentUser);
+            List<InvoiceItem> invoiceItems = currentInvoice.getInvoiceItems();
+            for (InvoiceItem invoiceItem : invoiceItems) {
+                displayCart(invoiceItem.getCart());
+            }
+        }
+        System.out.println("----------------- Invoice -----------------");
+        backToMenu();
+    }
+
+    public void paidInvoice() {
+        if (currentUser.getPhoneNumber() == null && currentUser.getAddress() == null) {
+            System.err.println("Please update your info: phone number & address. To complete payment");
+            System.out.println("1. Account");
+            System.out.println("2. Back To Menu");
+            System.out.println("Enter your choice: ");
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    showInfoUser(currentUser);
+                    break;
+                case 2:
+                    new UserView();
+                    break;
+            }
+        } else {
+            InvoiceItem invoiceItem = new InvoiceItem(copyCart, true);
+            if (invoiceController.createInvoice(invoiceItem)) {
+                System.out.println("Create Invoice Success!");
+            }
+        }
+    }
+
+    public void idNotFound() {
+        System.err.println("Id Not Found!");
+        System.out.println("1. Try Again");
+        System.out.println("2. Back to Menu");
+        System.out.println("Enter your choice: ");
+        boolean check = true;
+        while (check) {
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    check = false;
+                    changeProductQuantity();
+                    break;
+                case 2:
+                    check = false;
+                    new UserView();
+                    break;
+                default:
+                    System.err.println("Invalid Requirement!");
+            }
+        }
+    }
+
+    public void showInfoUser(User user) {
+        System.out.println("--------------------- Info ----------------------");
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Fullname: " + user.getFullName());
+        System.out.println("Address: " + ((user.getAddress() == null) ? "<blank>" : user.getAddress()));
+        System.out.println("Phone: " + ((user.getPhoneNumber() == null) ? "<blank>" : user.getPhoneNumber()));
+        System.out.println("--------------------- Info ----------------------");
+        System.out.println("1. Update Info");
+        System.out.println("2. Back To Menu");
+        System.out.println("Enter your choice: ");
+        int choice = Integer.parseInt(Config.scanner().nextLine());
+        switch (choice) {
+            case 1:
+                updateInfoUser(user);
+                break;
+            case 2:
+                new UserView();
+                break;
+            default:
+                System.err.println("Invalid Requirement!");
+        }
+    }
+
+    public void updateInfoUser(User user) {
+        System.out.println("Enter your update full name: ");
+        String fullName = Config.scanner().nextLine();
+        System.out.println("Enter your address: ");
+        String address = Config.scanner().nextLine();
+        System.out.println("Enter your phone: ");
+        String phone = Config.scanner().nextLine();
+        User newUser = new User(user.getId(), user.getEmail(), user.getPassword(), fullName, phone, address, user.getRole(), user.isStatus());
+        userController.updateInfo(newUser);
+        System.out.println("Update Success!");
+        backToMenu();
     }
 
     public void showProduct(Product product) {
+        System.out.println("Product ID: " + product.getProductId());
         System.out.println("Product Name: " + product.getProductName());
         System.out.println("Description: " + (product.getDescription() == null ? "<blank>" : product.getDescription()));
         System.out.println("Price: " + product.getPrice());

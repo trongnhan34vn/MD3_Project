@@ -2,7 +2,7 @@ package project.view.admin;
 
 import project.config.Config;
 import project.controller.CatalogController;
-import project.model.Catalog;
+import project.model.product.Catalog;
 import java.util.List;
 
 public class CatalogManagement {
