@@ -10,7 +10,6 @@ import project.model.invoice.InvoiceItem;
 import project.model.product.Catalog;
 import project.model.product.Product;
 import project.model.user.User;
-
 import java.util.List;
 
 public class UserView {
@@ -22,7 +21,7 @@ public class UserView {
     User currentUser = userController.getCurrentUser();
     InvoiceController invoiceController = new InvoiceController();
     Cart copyCart = cartController.getCurrentUserCart();
-
+    List<InvoiceItem> listInvoiceItem = invoiceController.getListInvoiceItem();
 
     public UserView() {
         System.out.println("-------------------------- GUITAR PLUS --------------------------");
@@ -30,7 +29,7 @@ public class UserView {
         System.out.println("2. Search Products By Name");
         System.out.println("3. Add to Cart");
         System.out.println("4. Show Cart");
-        System.out.println("5. Invoice");
+        System.out.println("5. Show Invoices");
         System.out.println("6. Account");
         System.out.println("7. Log Out");
         System.out.println("-------------------------- GUITAR PLUS --------------------------");
@@ -59,7 +58,20 @@ public class UserView {
                 break;
             case 7:
                 break;
+            default:
+                System.err.println("Invalid Requirement! Try again!");
+                new UserView();
+                break;
         }
+    }
+
+
+    //    show list products theo catalog
+    public void showProduct(Product product) {
+        System.out.println("Product ID: " + product.getProductId());
+        System.out.println("Product Name: " + product.getProductName());
+        System.out.println("Description: " + (product.getDescription() == null ? "<blank>" : product.getDescription()));
+        System.out.println("Price: " + Config.currencyVN.format(product.getPrice()));
     }
 
     public void showListProducts() {
@@ -80,7 +92,7 @@ public class UserView {
             System.out.println("Product Name: " + product.getProductName());
             System.out.println("Description: " + ((product.getDescription() == null) ? "<blank>" : product.getDescription()));
             System.out.println("Quantity: " + product.getQuantity());
-            System.out.println("Price: " + product.getPrice());
+            System.out.println("Price: " + Config.currencyVN.format(product.getPrice()));
             System.out.println("Status: " + (product.isProductStatus() ? "stocking" : "out of stock"));
             System.out.print("\n");
         }
@@ -95,15 +107,22 @@ public class UserView {
             System.err.println("Not Found!");
             System.out.println("1. Try Again");
             System.out.println("2. Back to Menu");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    searchProductByName();
-                    break;
-                case 2:
-                    backToMenu();
-                    break;
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        searchProductByName();
+                        break;
+                    case 2:
+                        backToMenu();
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement! Try again!");
+                        break;
+                }
             }
+
         } else {
             System.out.println("-----------------------------------------");
             showList(listSearch);
@@ -112,6 +131,7 @@ public class UserView {
         }
     }
 
+    //    Cart
     public void addToCart() {
         showListProducts();
         System.out.println("Enter product ID to add to cart: ");
@@ -121,14 +141,16 @@ public class UserView {
             System.err.println("ID Not Found!");
             System.out.println("1. Try Again");
             System.out.println("2. Back to Menu");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    addToCart();
-                    break;
-                case 2:
-                    new UserView();
-                    break;
+            while (true) {
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        addToCart();
+                        break;
+                    case 2:
+                        new UserView();
+                        break;
+                }
             }
         } else {
             System.out.println("Enter quantity: ");
@@ -138,63 +160,77 @@ public class UserView {
                 System.out.println("Add to Cart Success!");
             }
             System.out.println("1. Continue add to cart");
-            System.out.println("2. Back to Menu");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    addToCart();
-                    break;
-                case 2:
-                    new UserView();
-                    break;
-                default:
-                    System.err.println("Invalid Requirement!");
+            System.out.println("2. Show Cart");
+            System.out.println("3. Back to Menu");
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        addToCart();
+                        break;
+                    case 2:
+                        showCart();
+                        break;
+                    case 3:
+                        new UserView();
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement! Try again!");
+                        break;
+                }
             }
         }
     }
 
     public void displayCart(Cart cart) {
-        System.out.println("---------------- Shopping Cart ----------------");
         if (cart != null) {
             for (CartItem cartItem : cart.getCartItems()) {
                 showProduct(cartItem.getProduct());
                 System.out.println("Quantity: " + cartItem.getQuantity());
                 System.out.println(" ");
             }
-            System.out.println("Total: " + cartController.getTotal(cart.getCartItems()));
+            System.out.println("-------------");
+            System.out.println("Total: " + Config.currencyVN.format(cartController.getTotal(cart.getCartItems())));
         }
-        System.out.println("---------------- Shopping Cart ----------------");
+        System.out.println(" ");
     }
 
     public void showCart() {
         Cart currentCart = cartController.getCurrentUserCart();
+        System.out.println("---------------- Shopping Cart ----------------");
         displayCart(currentCart);
+        System.out.println("---------------- Shopping Cart ----------------");
         System.out.println("1. Add more product to cart ");
         System.out.println("2. Change product quantity");
         System.out.println("3. Remove product from cart");
         System.out.println("4. Payment");
         System.out.println("5. Back to Menu");
-        System.out.println("Enter your choice: ");
-        int choice = Integer.parseInt(Config.scanner().nextLine());
-        switch (choice) {
-            case 1:
-                addToCart();
-                break;
-            case 2:
-                changeProductQuantity();
-                break;
-            case 3:
-                removeProductFromCart();
-                break;
-            case 4:
-                paidInvoice();
-                break;
-            case 5:
-                new UserView();
-                break;
-            default:
-                System.err.println("Invalid Requirement!");
+        while (true) {
+            System.out.println("Enter your choice: ");
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    addToCart();
+                    break;
+                case 2:
+                    changeProductQuantity();
+                    break;
+                case 3:
+                    removeProductFromCart();
+                    break;
+                case 4:
+                    paidInvoice();
+                    break;
+                case 5:
+                    new UserView();
+                    break;
+                default:
+                    System.err.println("Invalid Requirement! Try again!");
+                    break;
+            }
         }
+
     }
 
     public void changeProductQuantity() {
@@ -222,7 +258,7 @@ public class UserView {
             }
         } else {
             System.err.println("Cart is empty! Please add product to cart!");
-            backToMenu();
+            showCart();
         }
     }
 
@@ -239,31 +275,24 @@ public class UserView {
             }
         } else {
             System.err.println("Cart is empty! Please add product to cart!");
-            backToMenu();
+            showCart();
         }
     }
-
-    public void displayUser(User user) {
-        System.out.println("-------------- User --------------");
-        System.out.println("Name: " + user.getFullName());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Address: " + user.getAddress());
-        System.out.println("Phone: " + user.getPhoneNumber());
-        System.out.println("-------------- User --------------");
-    }
-
+//  Invoice
     public void showInvoice() {
 //        In ra hoá đơn (thông tin user, thông tin sản phẩm)
-        System.out.println("----------------- Invoice -----------------");
+        System.out.println("----------------- Invoices -----------------");
         Invoice currentInvoice = invoiceController.findById(currentUser.getId());
         if (currentInvoice != null) {
             displayUser(currentUser);
             List<InvoiceItem> invoiceItems = currentInvoice.getInvoiceItems();
             for (InvoiceItem invoiceItem : invoiceItems) {
+                System.out.println("---------------- Invoice " + "#" + invoiceItem.getInvoiceId() +" ----------------");
                 displayCart(invoiceItem.getCart());
+                System.out.println("---------------- End Invoice ----------------");
             }
         }
-        System.out.println("----------------- Invoice -----------------");
+        System.out.println("----------------- Invoices -----------------");
         backToMenu();
     }
 
@@ -281,13 +310,50 @@ public class UserView {
                 case 2:
                     new UserView();
                     break;
+                default:
+                    System.err.println("Invalid Requirement!");
+                    break;
             }
         } else {
-            InvoiceItem invoiceItem = new InvoiceItem(copyCart, true);
+            int id;
+            if (listInvoiceItem.isEmpty()) {
+                id = 1;
+            } else {
+                id = listInvoiceItem.get(listInvoiceItem.size() - 1).getInvoiceId() + 1;
+            }
+            InvoiceItem invoiceItem = new InvoiceItem(id, copyCart, false);
             if (invoiceController.createInvoice(invoiceItem)) {
                 System.out.println("Create Invoice Success!");
             }
+            System.out.println("To Show Invoices or Back to Menu");
+            System.out.println("1. Show Invoices ");
+            System.out.println("2. Back to Menu");
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        showInvoice();
+                        break;
+                    case 2:
+                        new UserView();
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement! Try again!");
+                        break;
+                }
+            }
         }
+    }
+
+    //  User
+    public void displayUser(User user) {
+        System.out.println("-------------- User --------------");
+        System.out.println("Name: " + user.getFullName());
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Address: " + user.getAddress());
+        System.out.println("Phone: " + user.getPhoneNumber());
+        System.out.println("-------------- User --------------");
     }
 
     public void idNotFound() {
@@ -295,20 +361,18 @@ public class UserView {
         System.out.println("1. Try Again");
         System.out.println("2. Back to Menu");
         System.out.println("Enter your choice: ");
-        boolean check = true;
-        while (check) {
+        while (true) {
             int choice = Integer.parseInt(Config.scanner().nextLine());
             switch (choice) {
                 case 1:
-                    check = false;
                     changeProductQuantity();
                     break;
                 case 2:
-                    check = false;
                     new UserView();
                     break;
                 default:
                     System.err.println("Invalid Requirement!");
+                    break;
             }
         }
     }
@@ -316,23 +380,31 @@ public class UserView {
     public void showInfoUser(User user) {
         System.out.println("--------------------- Info ----------------------");
         System.out.println("Email: " + user.getEmail());
+        System.out.println("Password: *********");
         System.out.println("Fullname: " + user.getFullName());
         System.out.println("Address: " + ((user.getAddress() == null) ? "<blank>" : user.getAddress()));
         System.out.println("Phone: " + ((user.getPhoneNumber() == null) ? "<blank>" : user.getPhoneNumber()));
         System.out.println("--------------------- Info ----------------------");
         System.out.println("1. Update Info");
-        System.out.println("2. Back To Menu");
+        System.out.println("2. Change Password");
+        System.out.println("3. Back To Menu");
         System.out.println("Enter your choice: ");
-        int choice = Integer.parseInt(Config.scanner().nextLine());
-        switch (choice) {
-            case 1:
-                updateInfoUser(user);
-                break;
-            case 2:
-                new UserView();
-                break;
-            default:
-                System.err.println("Invalid Requirement!");
+        while (true) {
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    updateInfoUser(user);
+                    break;
+                case 2:
+                    changePassword(user);
+                    break;
+                case 3:
+                    new UserView();
+                    break;
+                default:
+                    System.err.println("Invalid Requirement! Try again!");
+                    break;
+            }
         }
     }
 
@@ -349,18 +421,45 @@ public class UserView {
         backToMenu();
     }
 
-    public void showProduct(Product product) {
-        System.out.println("Product ID: " + product.getProductId());
-        System.out.println("Product Name: " + product.getProductName());
-        System.out.println("Description: " + (product.getDescription() == null ? "<blank>" : product.getDescription()));
-        System.out.println("Price: " + product.getPrice());
+    public void changePassword(User user) {
+        System.out.println("Enter current password: ");
+        String password = Config.scanner().nextLine();
+        if (password.equals(currentUser.getPassword())) {
+            System.out.println("Enter new password: ");
+            String newPass = Config.scanner().nextLine();
+            User newUser = new User(user.getId(), user.getEmail(), newPass, user.getFullName(), user.getPhoneNumber(), user.getAddress(), user.getRole(), user.isStatus());
+            updateInfoUser(newUser);
+            System.out.println("Change password success!");
+            backToMenu();
+        } else {
+            System.err.println("Wrong Password! Try again!");
+            System.out.println("1. Try Again");
+            System.out.println("2. Back to Menu");
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        changePassword(user);
+                        break;
+                    case 2:
+                        updateInfoUser(user);
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement!");
+                        break;
+                }
+            }
+        }
     }
 
     public void backToMenu() {
-        System.out.println("Enter 'back' to back to menu: ");
-        String back = Config.scanner().nextLine();
-        if (back.equalsIgnoreCase("back")) {
-            new UserView();
+        while (true) {
+            System.out.println("Enter 'back' to back to menu: ");
+            String back = Config.scanner().nextLine();
+            if (back.equalsIgnoreCase("back")) {
+                new UserView();
+            }
         }
     }
 }

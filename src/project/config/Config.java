@@ -1,14 +1,18 @@
 package project.config;
 
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Config<E> {
     public static Scanner scanner() {
         return new Scanner(System.in);
     }
+    public static Locale localeVN = new Locale("vi", "VN");
+    public static NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
     public List<E> readFromFile(String path) {
         List<E> list = new ArrayList<>();
         File file = null;

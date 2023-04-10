@@ -13,7 +13,7 @@ import project.service.user.UserServiceIMPL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvoiceServiceIMPL implements IInvoiceService{
+public class InvoiceServiceIMPL implements IInvoiceService {
     ICartService cartService = new CartServiceIMPL();
     IUserService userService = new UserServiceIMPL();
     User currentUser = userService.getCurrentUser();
@@ -38,7 +38,7 @@ public class InvoiceServiceIMPL implements IInvoiceService{
 
     @Override
     public Invoice findById(int id) {
-        for (Invoice invoice: listInvoices) {
+        for (Invoice invoice : listInvoices) {
             if (invoice.getUser().getId() == id) {
                 return invoice;
             }
@@ -61,14 +61,33 @@ public class InvoiceServiceIMPL implements IInvoiceService{
             listCurUserInvoice.add(invoiceItem);
             Invoice newInvoice = new Invoice(currentUser, listCurUserInvoice);
             save(newInvoice);
-            cartService.deleteById(currentUser.getId());
         } else {
             listCurUserInvoice = currentInvoice.getInvoiceItems();
             listCurUserInvoice.add(invoiceItem);
             currentInvoice.setInvoiceItems(listCurUserInvoice);
             save(currentInvoice);
-            cartService.deleteById(currentUser.getId());
         }
+        cartService.deleteById(currentUser.getId());
         return true;
+    }
+
+
+    @Override
+    public List<InvoiceItem> findAllInvoiceItems() {
+        Invoice currentInvoice = getCurrrentInvoice();
+        if (currentInvoice == null) {
+            return new ArrayList<>();
+        }
+        return currentInvoice.getInvoiceItems();
+    }
+
+    @Override
+    public Invoice getCurrrentInvoice() {
+        for (Invoice invoice : listInvoices) {
+            if (invoice.getUser().getId()==currentUser.getId()) {
+                return invoice;
+            }
+        }
+        return null;
     }
 }

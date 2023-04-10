@@ -22,6 +22,7 @@ public class CartServiceIMPL implements ICartService {
 
     Cart currentCart;
     List<CartItem> listCartItem;
+
     {
         if (listCarts != null) {
             currentCart = getCurrentUserCart();
@@ -60,9 +61,7 @@ public class CartServiceIMPL implements ICartService {
 
     @Override
     public void deleteById(int id) {
-        if (findById(id) != null) {
-            listCarts.remove(findById(id));
-        }
+        listCarts.removeIf(cart -> cart.getUser().getId() == id);
         new Config<Cart>().writeToFile(listCarts, Path.CART_PATH);
     }
 

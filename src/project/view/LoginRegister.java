@@ -130,29 +130,36 @@ public class LoginRegister {
             System.err.println("Email is existed! Please try again");
             System.out.println("1. Try Again!");
             System.out.println("2. Back to menu");
-            System.out.println("Enter your choice: ");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    register();
-                    break;
-                case 2:
-                    backToMenu();
-                    break;
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        register();
+                        break;
+                    case 2:
+                        backToMenu();
+                        break;
+                }
             }
         } else {
             System.out.println("Register Success!");
             System.out.println("1. Login");
             System.out.println("2. Back to menu");
-            System.out.println("Enter your choice: ");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    login();
-                    break;
-                case 2:
-                    backToMenu();
-                    break;
+            while (true) {
+                System.out.println("Enter your choice: ");
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        login();
+                        break;
+                    case 2:
+                        backToMenu();
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement! Try Again!");
+                        break;
+                }
             }
         }
     }

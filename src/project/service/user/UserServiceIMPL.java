@@ -19,7 +19,7 @@ public class UserServiceIMPL implements IUserService {
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(role);
         boolean isCheck = false;
-        for (User user: listUsers) {
+        for (User user : listUsers) {
             if (user.getId() == 0 || user.getEmail().equalsIgnoreCase("admin@gmail.com")) {
                 isCheck = true;
             }
@@ -39,7 +39,7 @@ public class UserServiceIMPL implements IUserService {
         if (findById(user.getId()) == null) {
             listUsers.add(user);
         } else {
-            listUsers.set(listUsers.indexOf(findById(user.getId())),user);
+            listUsers.set(listUsers.indexOf(findById(user.getId())), user);
         }
         new Config<User>().writeToFile(listUsers, Path.USER_PATH);
     }
@@ -95,7 +95,7 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public boolean changeUserStatus(int id) {
-        for (User user: listUsers) {
+        for (User user : listUsers) {
             if (user.getId() == id) {
                 user.setStatus(!user.isStatus());
                 new Config<User>().writeToFile(listUsers, Path.USER_PATH);

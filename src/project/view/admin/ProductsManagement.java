@@ -55,7 +55,7 @@ public class ProductsManagement {
             System.out.println("Product Name: " + product.getProductName());
             System.out.println("Description: " + ((product.getDescription() == null) ? "<blank>" : product.getDescription()));
             System.out.println("Quantity: " + product.getQuantity());
-            System.out.println("Price: " + product.getPrice());
+            System.out.println("Price: " + Config.currencyVN.format(product.getPrice()));
             System.out.println("Status: " + (product.isProductStatus() ? "stocking" : "out of stock"));
             System.out.println("----------------------------------");
         }
@@ -201,14 +201,18 @@ public class ProductsManagement {
             System.err.println("Not Found!");
             System.out.println("1. Try Again");
             System.out.println("2. Back to Menu");
-            int choice = Integer.parseInt(Config.scanner().nextLine());
-            switch (choice) {
-                case 1:
-                    searchProductByName();
-                    break;
-                case 2:
-                    backToMenu();
-                    break;
+            while (true) {
+                int choice = Integer.parseInt(Config.scanner().nextLine());
+                switch (choice) {
+                    case 1:
+                        searchProductByName();
+                        break;
+                    case 2:
+                        backToMenu();
+                        break;
+                    default:
+                        System.err.println("Invalid Requirement! Try again!");
+                }
             }
         } else {
             showListProducts(listSearch);
