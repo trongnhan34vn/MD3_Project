@@ -4,6 +4,7 @@ import project.config.Config;
 import project.data.Path;
 import project.model.invoice.Invoice;
 import project.model.invoice.InvoiceItem;
+import project.model.invoice.InvoiceStatus;
 import project.model.user.User;
 import project.service.cart.CartServiceIMPL;
 import project.service.cart.ICartService;
@@ -107,5 +108,12 @@ public class InvoiceServiceIMPL implements IInvoiceService {
         listInvoiceItem.set(listInvoiceItem.indexOf(getInvoiceItem(invoiceItem.getInvoiceId())),invoiceItem);
         new Config<Invoice>().writeToFile(listInvoices,Path.INVOICE_PATH);
         return true;
+    }
+
+    @Override
+    public List<InvoiceItem> getReject(List<InvoiceItem> list) {
+        List<InvoiceItem> rejectList = new ArrayList<>(list);
+        rejectList.removeIf(invoiceItem -> invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING);
+        return rejectList;
     }
 }

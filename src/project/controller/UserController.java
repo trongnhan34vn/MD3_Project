@@ -75,4 +75,8 @@ public class UserController {
     public void updateInfo(User user) {
         userService.save(user);
     }
+
+    public User findById(int id) {
+        return userService.findById(id);
+    }
 }

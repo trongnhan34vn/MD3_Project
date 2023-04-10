@@ -27,4 +27,8 @@ public class InvoiceController {
     public List<Invoice> getAllInvoice() {
         return invoiceService.findAll();
     }
+
+    public List<InvoiceItem> getReject(List<InvoiceItem> list) {
+        return invoiceService.getReject(list);
+    }
 }

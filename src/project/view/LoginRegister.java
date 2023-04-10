@@ -71,7 +71,7 @@ public class LoginRegister {
             } else {
                 if (currentUser.isStatus()) {
 //                chuyển trang User
-                    new UserView();
+                    new UserView().menu();
                 } else {
                     System.err.println("Your Account has been blocked!");
                     try {

@@ -24,7 +24,7 @@ public class AdminView {
                 new UserManagement();
                 break;
             case 4:
-
+                new InvoiceManagement();
                 break;
             case 5:
                 break;
