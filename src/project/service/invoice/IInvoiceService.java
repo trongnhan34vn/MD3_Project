@@ -11,4 +11,6 @@ public interface IInvoiceService extends IGenericService<Invoice> {
     boolean createInvoice(InvoiceItem invoiceItem);
     List<InvoiceItem> findAllInvoiceItems();
     Invoice getCurrrentInvoice();
+    InvoiceItem getInvoiceItem(int id);
+    boolean updateInvoiceItem(InvoiceItem invoiceItem);
 }

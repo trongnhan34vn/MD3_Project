@@ -84,10 +84,28 @@ public class InvoiceServiceIMPL implements IInvoiceService {
     @Override
     public Invoice getCurrrentInvoice() {
         for (Invoice invoice : listInvoices) {
-            if (invoice.getUser().getId()==currentUser.getId()) {
+            if (invoice.getUser().getId() == currentUser.getId()) {
                 return invoice;
             }
         }
         return null;
+    }
+
+    @Override
+    public InvoiceItem getInvoiceItem(int id) {
+        for (InvoiceItem invoiceItem : getCurrrentInvoice().getInvoiceItems()) {
+            if (invoiceItem.getInvoiceId() == id) {
+                return invoiceItem;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateInvoiceItem(InvoiceItem invoiceItem) {
+        List<InvoiceItem> listInvoiceItem = getCurrrentInvoice().getInvoiceItems();
+        listInvoiceItem.set(listInvoiceItem.indexOf(getInvoiceItem(invoiceItem.getInvoiceId())),invoiceItem);
+        new Config<Invoice>().writeToFile(listInvoices,Path.INVOICE_PATH);
+        return true;
     }
 }

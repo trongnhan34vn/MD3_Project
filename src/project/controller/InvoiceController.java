@@ -18,5 +18,13 @@ public class InvoiceController {
     public List<InvoiceItem> getListInvoiceItem() {
         return invoiceService.findAllInvoiceItems();
     }
-
+    public InvoiceItem getInvoiceItemById(int id) {
+        return invoiceService.getInvoiceItem(id);
+    }
+    public boolean updateInvoiceItem(InvoiceItem invoiceItem) {
+        return invoiceService.updateInvoiceItem(invoiceItem);
+    }
+    public List<Invoice> getAllInvoice() {
+        return invoiceService.findAll();
+    }
 }

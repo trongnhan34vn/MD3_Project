@@ -7,15 +7,30 @@ import java.io.Serializable;
 public class InvoiceItem implements Serializable {
     private int invoiceId;
     private Cart cart;
-    private boolean invoiceStatus;
+    private InvoiceStatus invoiceStatus;
+    private String rejectMessage;
 
     public InvoiceItem() {
     }
 
-    public InvoiceItem(int invoiceId, Cart cart, boolean invoiceStatus) {
+    public InvoiceItem(int invoiceId, Cart cart, InvoiceStatus invoiceStatus, String rejectMessage) {
         this.invoiceId = invoiceId;
         this.cart = cart;
         this.invoiceStatus = invoiceStatus;
+        this.rejectMessage = rejectMessage;
+    }
+
+    public InvoiceItem(int invoiceId, Cart cart) {
+        this.invoiceId = invoiceId;
+        this.cart = cart;
+    }
+
+    public String getRejectMessage() {
+        return rejectMessage;
+    }
+
+    public void setRejectMessage(String rejectMessage) {
+        this.rejectMessage = rejectMessage;
     }
 
     public int getInvoiceId() {
@@ -34,11 +49,11 @@ public class InvoiceItem implements Serializable {
         this.cart = cart;
     }
 
-    public boolean isInvoiceStatus() {
+    public InvoiceStatus isInvoiceStatus() {
         return invoiceStatus;
     }
 
-    public void setInvoiceStatus(boolean invoiceStatus) {
+    public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
 }
