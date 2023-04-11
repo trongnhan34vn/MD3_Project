@@ -27,12 +27,7 @@ public class InvoiceController {
     public List<Invoice> getAllInvoice() {
         return invoiceService.findAll();
     }
-
-    public List<Invoice> getAllPending() {
-        return invoiceService.getAllPending();
-    }
-
-    public List<Invoice> getAllReject() {
+    public List<Invoice> getAllRejectInvoice() {
         return invoiceService.getAllRejectInvoice();
     }
 }

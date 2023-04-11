@@ -12,6 +12,6 @@ public interface IInvoiceService extends IGenericService<Invoice> {
     Invoice getCurrrentInvoice();
     InvoiceItem getInvoiceItemById(int id);
     boolean updateInvoiceItem(InvoiceItem invoiceItem, int id);
-    List<Invoice> getAllPending();
     List<Invoice> getAllRejectInvoice();
+
 }

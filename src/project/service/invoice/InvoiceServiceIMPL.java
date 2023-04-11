@@ -4,8 +4,6 @@ import project.config.Config;
 import project.data.Path;
 import project.model.invoice.Invoice;
 import project.model.invoice.InvoiceItem;
-import project.model.invoice.InvoiceStatus;
-import project.model.invoice.RejectStatus;
 import project.model.user.User;
 import project.service.cart.CartServiceIMPL;
 import project.service.cart.ICartService;
@@ -107,32 +105,23 @@ public class InvoiceServiceIMPL implements IInvoiceService {
     public boolean updateInvoiceItem(InvoiceItem invoiceItem, int userId) {
         List<InvoiceItem> listInvoiceItem = findById(userId).getInvoiceItems();
         InvoiceItem updateInvoice = null;
-        for (InvoiceItem item:listInvoiceItem) {
+        for (InvoiceItem item : listInvoiceItem) {
             if (item.getInvoiceId() == invoiceItem.getInvoiceId()) {
                 updateInvoice = item;
                 break;
             }
         }
-        listInvoiceItem.set(listInvoiceItem.indexOf(updateInvoice),invoiceItem);
-        new Config<Invoice>().writeToFile(listInvoices,Path.INVOICE_PATH);
+        listInvoiceItem.set(listInvoiceItem.indexOf(updateInvoice), invoiceItem);
+        new Config<Invoice>().writeToFile(listInvoices, Path.INVOICE_PATH);
         return true;
     }
 
     @Override
-    public List<Invoice> getAllPending() {
-        List<Invoice> listPending = new ArrayList<>(findAll());
-        for (Invoice invoice:listPending) {
-            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.isInvoiceStatus() != InvoiceStatus.PENDING);
-        }
-        return listPending;
-    }
-
-    @Override
     public List<Invoice> getAllRejectInvoice() {
-        List<Invoice> listPending = new ArrayList<>(findAll());
-        for (Invoice invoice:listPending) {
-            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.getRejectStatus() != RejectStatus.PENDING);
+        List<Invoice> copyArr = new ArrayList<>(listInvoices);
+        for (Invoice invoice : copyArr) {
+            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.getRejectMessage() == null);
         }
-        return listPending;
+        return copyArr;
     }
 }

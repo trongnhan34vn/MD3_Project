@@ -1,6 +1,7 @@
 package project.view;
 
 import project.config.Config;
+import project.config.Validate;
 import project.controller.UserController;
 import project.dto.request.SignInDTO;
 import project.dto.request.SignUpDTO;
@@ -113,10 +114,26 @@ public class LoginRegister {
         } else {
             id = listUsers.get(listUsers.size() - 1).getId() + 1;
         }
-        System.out.println("Enter your email: ");
-        String email = Config.scanner().nextLine();
-        System.out.println("Enter your password: ");
-        String password = Config.scanner().nextLine();
+        String email;
+        while (true) {
+            System.out.println("Enter your email: ");
+            email = Config.scanner().nextLine();
+            if(Validate.checkEmail(email)) {
+                break;
+            } else {
+                System.err.println("Invalid Email! Try again!");
+            }
+        }
+        String password;
+        while (true) {
+            System.out.println("Enter your password: ");
+            password = Config.scanner().nextLine();
+            if(Validate.checkPassword(password)) {
+                break;
+            } else {
+                System.err.println("Invalid Password! Try again!");
+            }
+        }
         System.out.println("Enter your name: ");
         String fullName = Config.scanner().nextLine();
 //        Tạo hashSet để truyền vào khởi tạo đối tượng SignUpSTD

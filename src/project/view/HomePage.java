@@ -1,6 +1,7 @@
 package project.view;
 
 import project.config.Config;
+import project.view.user.ProductView;
 
 public class HomePage {
     public HomePage() {
@@ -14,6 +15,8 @@ public class HomePage {
         switch (choice) {
             case 1:
 //                Show List Products
+                new ProductView().showListProducts();
+                backToMenu();
                 break;
             case 2:
 //               đến Login & Register
@@ -21,6 +24,17 @@ public class HomePage {
                 break;
             case 3:
                 System.exit(0);
+        }
+    }
+
+    public void backToMenu() {
+        while (true) {
+            System.out.println("Enter 'back' to back to menu: ");
+            String back = Config.scanner().nextLine();
+            if(back.equalsIgnoreCase("back")) {
+                new HomePage();
+                break;
+            }
         }
     }
 }

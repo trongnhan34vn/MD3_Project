@@ -1,6 +1,7 @@
 package project.view.user;
 
 import project.config.Config;
+import project.config.Validate;
 import project.controller.UserController;
 import project.model.user.User;
 import project.view.HomePage;
@@ -107,8 +108,16 @@ public class UserView {
         String fullName = Config.scanner().nextLine();
         System.out.println("Enter your address: ");
         String address = Config.scanner().nextLine();
-        System.out.println("Enter your phone: ");
-        String phone = Config.scanner().nextLine();
+        String phone;
+        while (true) {
+            System.out.println("Enter your phone: ");
+            phone = Config.scanner().nextLine();
+            if(Validate.checkPhoneNumber(phone)) {
+                break;
+            } else {
+                System.err.println("Invalid Phone Number! Try again!");
+            }
+        }
         User newUser = new User(user.getId(), user.getEmail(), user.getPassword(), fullName, phone, address, user.getRole(), user.isStatus());
         userController.updateInfo(newUser);
         System.out.println("Update Success!");
