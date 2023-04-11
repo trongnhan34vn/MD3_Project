@@ -11,4 +11,5 @@ public interface IUserService extends IGenericService<User> {
     User getCurrentUser() ;
     boolean changeUserStatus(int id);
     List<User> searchUserName(String search);
+    void logOut();
 }

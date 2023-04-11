@@ -5,6 +5,7 @@ import project.data.Path;
 import project.model.invoice.Invoice;
 import project.model.invoice.InvoiceItem;
 import project.model.invoice.InvoiceStatus;
+import project.model.invoice.RejectStatus;
 import project.model.user.User;
 import project.service.cart.CartServiceIMPL;
 import project.service.cart.ICartService;
@@ -93,7 +94,7 @@ public class InvoiceServiceIMPL implements IInvoiceService {
     }
 
     @Override
-    public InvoiceItem getInvoiceItem(int id) {
+    public InvoiceItem getInvoiceItemById(int id) {
         for (InvoiceItem invoiceItem : getCurrrentInvoice().getInvoiceItems()) {
             if (invoiceItem.getInvoiceId() == id) {
                 return invoiceItem;
@@ -103,17 +104,35 @@ public class InvoiceServiceIMPL implements IInvoiceService {
     }
 
     @Override
-    public boolean updateInvoiceItem(InvoiceItem invoiceItem) {
-        List<InvoiceItem> listInvoiceItem = getCurrrentInvoice().getInvoiceItems();
-        listInvoiceItem.set(listInvoiceItem.indexOf(getInvoiceItem(invoiceItem.getInvoiceId())),invoiceItem);
+    public boolean updateInvoiceItem(InvoiceItem invoiceItem, int userId) {
+        List<InvoiceItem> listInvoiceItem = findById(userId).getInvoiceItems();
+        InvoiceItem updateInvoice = null;
+        for (InvoiceItem item:listInvoiceItem) {
+            if (item.getInvoiceId() == invoiceItem.getInvoiceId()) {
+                updateInvoice = item;
+                break;
+            }
+        }
+        listInvoiceItem.set(listInvoiceItem.indexOf(updateInvoice),invoiceItem);
         new Config<Invoice>().writeToFile(listInvoices,Path.INVOICE_PATH);
         return true;
     }
 
     @Override
-    public List<InvoiceItem> getReject(List<InvoiceItem> list) {
-        List<InvoiceItem> rejectList = new ArrayList<>(list);
-        rejectList.removeIf(invoiceItem -> invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING);
-        return rejectList;
+    public List<Invoice> getAllPending() {
+        List<Invoice> listPending = new ArrayList<>(findAll());
+        for (Invoice invoice:listPending) {
+            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.isInvoiceStatus() != InvoiceStatus.PENDING);
+        }
+        return listPending;
+    }
+
+    @Override
+    public List<Invoice> getAllRejectInvoice() {
+        List<Invoice> listPending = new ArrayList<>(findAll());
+        for (Invoice invoice:listPending) {
+            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.getRejectStatus() != RejectStatus.PENDING);
+        }
+        return listPending;
     }
 }

@@ -6,6 +6,8 @@ import project.model.user.Role;
 import project.model.user.RoleName;
 import project.model.user.User;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -84,11 +86,15 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public User getCurrentUser() {
-        User currentUser;
+        User cUser = null;
         List<User> listCurrentUsers = new Config<User>().readFromFile(Path.USER_LOGIN_PATH);
         if (listCurrentUsers.size() > 0) {
-            currentUser = listCurrentUsers.get(0);
-            return currentUser;
+            cUser = listCurrentUsers.get(0);
+            for (User user : listUsers) {
+                if (cUser.getId() == user.getId()) {
+                    return user;
+                }
+            }
         }
         return null;
     }
@@ -110,6 +116,19 @@ public class UserServiceIMPL implements IUserService {
         List<User> searchList = new ArrayList<>(listUsers);
         searchList.removeIf(user -> !user.getFullName().toLowerCase().contains(search));
         return searchList;
+    }
+
+    @Override
+    public void logOut() {
+        if (getCurrentUser() != null) {
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(Path.USER_LOGIN_PATH);
+                printWriter.close();
+            } catch (FileNotFoundException f) {
+                f.printStackTrace();
+            }
+        }
     }
 
 }

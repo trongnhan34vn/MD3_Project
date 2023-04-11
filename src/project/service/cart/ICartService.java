@@ -13,5 +13,6 @@ public interface ICartService extends IGenericService<Cart> {
     float getTotal(List<CartItem> list);
     boolean changeQuantityCartItem(CartItem cartItem);
     boolean removeCartItemById(int id);
+    boolean setProductQuantity(List<CartItem> list);
 
 }

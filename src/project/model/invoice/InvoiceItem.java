@@ -7,17 +7,35 @@ import java.io.Serializable;
 public class InvoiceItem implements Serializable {
     private int invoiceId;
     private Cart cart;
-    private InvoiceStatus invoiceStatus;
+    private RejectStatus rejectStatus;
     private String rejectMessage;
+    private InvoiceStatus invoiceStatus;
 
     public InvoiceItem() {
     }
 
-    public InvoiceItem(int invoiceId, Cart cart, InvoiceStatus invoiceStatus, String rejectMessage) {
+    public InvoiceItem(int invoiceId, Cart cart, RejectStatus rejectStatus, String rejectMessage, InvoiceStatus invoiceStatus) {
         this.invoiceId = invoiceId;
         this.cart = cart;
-        this.invoiceStatus = invoiceStatus;
+        this.rejectStatus = RejectStatus.PENDING;
         this.rejectMessage = rejectMessage;
+        this.invoiceStatus = InvoiceStatus.PENDING;
+    }
+
+    public InvoiceStatus isInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
+    }
+
+    public RejectStatus getRejectStatus() {
+        return rejectStatus;
+    }
+
+    public void setRejectStatus(RejectStatus rejectStatus) {
+        this.rejectStatus = rejectStatus;
     }
 
     public InvoiceItem(int invoiceId, Cart cart) {
@@ -49,11 +67,5 @@ public class InvoiceItem implements Serializable {
         this.cart = cart;
     }
 
-    public InvoiceStatus isInvoiceStatus() {
-        return invoiceStatus;
-    }
 
-    public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
-        this.invoiceStatus = invoiceStatus;
-    }
 }

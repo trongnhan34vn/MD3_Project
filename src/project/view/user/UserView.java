@@ -3,8 +3,7 @@ package project.view.user;
 import project.config.Config;
 import project.controller.UserController;
 import project.model.user.User;
-
-import java.util.List;
+import project.view.HomePage;
 
 public class UserView {
     UserController userController = new UserController();
@@ -45,9 +44,12 @@ public class UserView {
                 new InvoiceView().showInvoice();
                 break;
             case 6:
+                currentUser= userController.getCurrentUser();
                 showInfoUser(currentUser);
                 break;
             case 7:
+                userController.logOut();
+                new HomePage();
                 break;
             default:
                 System.err.println("Invalid Requirement! Try again!");

@@ -5,12 +5,16 @@ import project.data.Path;
 import project.model.cart.Cart;
 import project.model.cart.CartItem;
 import project.model.user.User;
+import project.service.product.IProductService;
+import project.service.product.ProductServiceIMPL;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartServiceIMPL implements ICartService {
     List<Cart> listCarts = new Config<Cart>().readFromFile(Path.CART_PATH);
+
+    IProductService productService = new ProductServiceIMPL();
     User currentUser;
 
     {
@@ -134,6 +138,15 @@ public class CartServiceIMPL implements ICartService {
         }
         listCartItem.removeIf(cartItem -> cartItem.getProduct().getProductId() == id);
         new Config<Cart>().writeToFile(listCarts, Path.CART_PATH);
+        return true;
+    }
+
+    @Override
+    public boolean setProductQuantity(List<CartItem> list) {
+        for (CartItem cartItem : list) {
+            cartItem.getProduct().setQuantity(cartItem.getProduct().getQuantity() - cartItem.getQuantity());
+            productService.save(cartItem.getProduct());
+        }
         return true;
     }
 }

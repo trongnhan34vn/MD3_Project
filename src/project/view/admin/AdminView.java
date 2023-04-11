@@ -1,6 +1,7 @@
 package project.view.admin;
 
 import project.config.Config;
+import project.view.HomePage;
 
 public class AdminView {
     public AdminView() {
@@ -27,6 +28,7 @@ public class AdminView {
                 new InvoiceManagement();
                 break;
             case 5:
+                new HomePage();
                 break;
         }
     }

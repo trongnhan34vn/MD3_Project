@@ -17,47 +17,78 @@ public class CartView {
         int productId = Integer.parseInt(Config.scanner().nextLine());
         Product selectProduct = productController.findById(productId);
         if (selectProduct == null) {
-            System.err.println("ID Not Found!");
-            System.out.println("1. Try Again");
-            System.out.println("2. Back to Menu");
-            while (true) {
-                int choice = Integer.parseInt(Config.scanner().nextLine());
-                switch (choice) {
-                    case 1:
-                        addToCart();
-                        break;
-                    case 2:
-                        new UserView().menu();
-                        break;
-                }
-            }
+            displaySelectProductNull();
         } else {
-            System.out.println("Enter quantity: ");
-            int quantity = Integer.parseInt(Config.scanner().nextLine());
+            displaySeProductNotNull(selectProduct);
+        }
+    }
+
+    private void displaySeProductNotNull(Product selectProduct) {
+        System.out.println("Enter quantity: ");
+        int quantity = Integer.parseInt(Config.scanner().nextLine());
+        if(quantity < selectProduct.getQuantity()) {
             CartItem cartItem = new CartItem(selectProduct, quantity);
             if (cartController.addToCart(cartItem)) {
                 System.out.println("Add to Cart Success!");
             }
-            System.out.println("1. Continue add to cart");
-            System.out.println("2. Show Cart");
-            System.out.println("3. Back to Menu");
-            while (true) {
-                System.out.println("Enter your choice: ");
-                int choice = Integer.parseInt(Config.scanner().nextLine());
-                switch (choice) {
-                    case 1:
-                        addToCart();
-                        break;
-                    case 2:
-                        showCart();
-                        break;
-                    case 3:
-                        new UserView().menu();
-                        break;
-                    default:
-                        System.err.println("Invalid Requirement! Try again!");
-                        break;
+            addToCartMenuExtend();
+        } else {
+            System.err.println("Out of stock! You can buy product with quantity in stock? Yes or No?(Y/N)");
+            String choice = Config.scanner().nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                quantity = selectProduct.getQuantity();
+                CartItem cartItem = new CartItem(selectProduct, quantity);
+                if (cartController.addToCart(cartItem)) {
+                    System.out.println("Add to Cart Success!");
                 }
+                addToCartMenuExtend();
+            } else {
+                System.err.println("Try another product! Enter 'back' to try another product!");
+                String back = Config.scanner().nextLine();
+                if (back.equalsIgnoreCase("back")) {
+                    addToCart();
+                }
+            }
+        }
+    }
+
+    private void displaySelectProductNull() {
+        System.err.println("ID Not Found!");
+        System.out.println("1. Try Again");
+        System.out.println("2. Back to Menu");
+        while (true) {
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    addToCart();
+                    break;
+                case 2:
+                    new UserView().menu();
+                    break;
+            }
+        }
+    }
+
+    private void addToCartMenuExtend() {
+        System.out.println("1. Continue add to cart");
+        System.out.println("2. Show Cart");
+        System.out.println("3. Back to Menu");
+        while (true) {
+            System.out.println("Enter your choice: ");
+            int choice = Integer.parseInt(Config.scanner().nextLine());
+            switch (choice) {
+                case 1:
+                    addToCart();
+                    break;
+                case 2:
+                    showCart();
+                    break;
+                case 3:
+                    new UserView().menu();
+                    break;
+                default:
+                    System.err.println("Invalid Requirement! Try again!");
+                    break;
             }
         }
     }
@@ -79,6 +110,10 @@ public class CartView {
         System.out.println("---------------- Shopping Cart ----------------");
         displayCart(currentCart);
         System.out.println("---------------- Shopping Cart ----------------");
+        menuShowCart();
+    }
+
+    private void menuShowCart() {
         System.out.println("1. Add more product to cart ");
         System.out.println("2. Change product quantity");
         System.out.println("3. Remove product from cart");
@@ -109,7 +144,6 @@ public class CartView {
                     break;
             }
         }
-
     }
 
     public void changeProductQuantity() {

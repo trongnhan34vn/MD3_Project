@@ -18,11 +18,9 @@ import java.util.Set;
 public class UserController {
     IUserService userService = new UserServiceIMPL();
     IRoleService roleService = new RoleServiceIMPL();
-
     public List<User> getAllUser() {
         return userService.findAll();
     }
-
     public ResponseMessage register(SignUpDTO sign) {
         if (userService.existByEmail(sign.getEmail())) {
             return new ResponseMessage("Email is existed!");
@@ -50,7 +48,6 @@ public class UserController {
         userService.save(user);
         return new ResponseMessage("Register Success!");
     }
-
     public ResponseMessage login(SignInDTO signInDTO) {
         if (userService.checkLogin(signInDTO.getEmail(), signInDTO.getPassword())) {
             getCurrentUser();
@@ -59,24 +56,22 @@ public class UserController {
             return new ResponseMessage("Login Faild!");
         }
     }
-
     public User getCurrentUser() {
         return userService.getCurrentUser();
     }
-
     public boolean changeUserStatus(int id) {
         return userService.changeUserStatus(id);
     }
-
     public List<User> searchByName (String search) {
         return userService.searchUserName(search);
     }
-
     public void updateInfo(User user) {
         userService.save(user);
     }
-
     public User findById(int id) {
         return userService.findById(id);
+    }
+    public void logOut() {
+        userService.logOut();
     }
 }

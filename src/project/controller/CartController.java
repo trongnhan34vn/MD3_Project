@@ -20,7 +20,6 @@ public class CartController {
     public Cart getCurrentUserCart() {
         return cartService.getCurrentUserCart();
     }
-
     public Cart findById(int id) {
         return cartService.findById(id);
     }
@@ -39,5 +38,9 @@ public class CartController {
 
     public float getTotal(List<CartItem> list) {
         return cartService.getTotal(list);
+    }
+
+    public boolean setProductQuantity(List<CartItem> list) {
+        return cartService.setProductQuantity(list);
     }
 }

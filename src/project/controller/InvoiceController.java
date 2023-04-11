@@ -19,16 +19,20 @@ public class InvoiceController {
         return invoiceService.findAllInvoiceItems();
     }
     public InvoiceItem getInvoiceItemById(int id) {
-        return invoiceService.getInvoiceItem(id);
+        return invoiceService.getInvoiceItemById(id);
     }
-    public boolean updateInvoiceItem(InvoiceItem invoiceItem) {
-        return invoiceService.updateInvoiceItem(invoiceItem);
+    public boolean updateInvoiceItem(InvoiceItem invoiceItem, int id) {
+        return invoiceService.updateInvoiceItem(invoiceItem, id);
     }
     public List<Invoice> getAllInvoice() {
         return invoiceService.findAll();
     }
 
-    public List<InvoiceItem> getReject(List<InvoiceItem> list) {
-        return invoiceService.getReject(list);
+    public List<Invoice> getAllPending() {
+        return invoiceService.getAllPending();
+    }
+
+    public List<Invoice> getAllReject() {
+        return invoiceService.getAllRejectInvoice();
     }
 }

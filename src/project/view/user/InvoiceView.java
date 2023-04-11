@@ -8,6 +8,7 @@ import project.model.cart.Cart;
 import project.model.invoice.Invoice;
 import project.model.invoice.InvoiceItem;
 import project.model.invoice.InvoiceStatus;
+import project.model.invoice.RejectStatus;
 import project.model.user.User;
 
 import java.util.List;
@@ -85,7 +86,7 @@ public class InvoiceView {
                 System.out.println("---------------- Invoice " + "#" + invoiceItem.getInvoiceId() + " ----------------");
                 new CartView().displayCart(invoiceItem.getCart());
                 if (invoiceItem.getRejectMessage() != null) {
-                    System.out.println("Reject Order: " + ((invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING) ? "PENDING" : (invoiceItem.isInvoiceStatus() == InvoiceStatus.TRUE) ? "ACCEPTED" : "DENIED"));
+                    System.out.println("Reject Order: " + ((invoiceItem.getRejectStatus() == RejectStatus.PENDING) ? "PENDING" : (invoiceItem.getRejectStatus() == RejectStatus.TRUE) ? "ACCEPTED" : "DENIED"));
                     System.out.println("Reason: " + invoiceItem.getRejectMessage());
                 }
                 System.out.println("---------------- End Invoice ----------------");
@@ -116,35 +117,40 @@ public class InvoiceView {
     }
 
     public void rejectOrder() {
-        System.out.println("Enter order Id: ");
-        int orderId = Integer.parseInt(Config.scanner().nextLine());
-        InvoiceItem selectInvoice = invoiceController.getInvoiceItemById(orderId);
-        if (selectInvoice != null) {
-            String rejectMessage = getRejectMessage();
-            InvoiceItem newInvoiceItem = new InvoiceItem(selectInvoice.getInvoiceId(), selectInvoice.getCart(), InvoiceStatus.PENDING, rejectMessage);
-            if (invoiceController.updateInvoiceItem(newInvoiceItem)) {
-                System.out.println("Wait for admin's confirm!");
-                new UserView().menu();
-            }
-        } else {
-            System.err.println("Id Not Found!");
-            System.out.println("1. Try Again");
-            System.out.println("2. Back To Menu");
-            while (true) {
-                System.out.println("Enter your choice: ");
-                int choice = Integer.parseInt(Config.scanner().nextLine());
-                switch (choice) {
-                    case 1:
-                        rejectOrder();
-                        break;
-                    case 2:
-                        new UserView().menu();
-                        break;
-                    default:
-                        System.err.println("Invalid Requirement! Try again");
-                        break;
+        if (!listInvoiceItem.isEmpty()) {
+            System.out.println("Enter order Id: ");
+            int orderId = Integer.parseInt(Config.scanner().nextLine());
+            InvoiceItem selectInvoice = invoiceController.getInvoiceItemById(orderId);
+            if (selectInvoice != null) {
+                String rejectMessage = getRejectMessage();
+                InvoiceItem newInvoiceItem = new InvoiceItem(selectInvoice.getInvoiceId(), selectInvoice.getCart(), RejectStatus.PENDING, rejectMessage, InvoiceStatus.PENDING);
+                if (invoiceController.updateInvoiceItem(newInvoiceItem, currentUser.getId())) {
+                    System.out.println("Wait for admin's confirm!");
+                    new UserView().backToMenu();
+                }
+            } else {
+                System.err.println("Id Not Found!");
+                System.out.println("1. Try Again");
+                System.out.println("2. Back To Menu");
+                while (true) {
+                    System.out.println("Enter your choice: ");
+                    int choice = Integer.parseInt(Config.scanner().nextLine());
+                    switch (choice) {
+                        case 1:
+                            rejectOrder();
+                            break;
+                        case 2:
+                            new UserView().menu();
+                            break;
+                        default:
+                            System.err.println("Invalid Requirement! Try again");
+                            break;
+                    }
                 }
             }
+        } else {
+            System.err.println("No Invoice!");
+            new UserView().backToMenu();
         }
     }
 
