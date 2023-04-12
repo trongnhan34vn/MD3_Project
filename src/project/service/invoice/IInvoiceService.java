@@ -10,8 +10,10 @@ public interface IInvoiceService extends IGenericService<Invoice> {
     boolean createInvoice(InvoiceItem invoiceItem);
     List<InvoiceItem> findAllInvoiceItems();
     Invoice getCurrrentInvoice();
-    InvoiceItem getInvoiceItemById(int id);
+    InvoiceItem getRejectInvoiceItemById(int id);
+    InvoiceItem getRejectInvoiceItemById(int id, int idUser);
     boolean updateInvoiceItem(InvoiceItem invoiceItem, int id);
     List<Invoice> getAllRejectInvoice();
-
+    InvoiceItem getPendingInvoiceItemById(int id, int idUser);
+    List<Invoice> getAllPendingInvoice();
 }

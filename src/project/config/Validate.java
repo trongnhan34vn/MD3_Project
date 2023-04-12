@@ -1,9 +1,10 @@
 package project.config;
 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Validate {
+public class Validate<E> {
     public static boolean checkPassword(String password){
         // Regex to check valid password.
         String regex = "^(?=.*[0-9])"

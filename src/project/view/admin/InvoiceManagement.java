@@ -12,9 +12,12 @@ import project.model.invoice.RejectStatus;
 
 import project.model.user.User;
 import project.view.user.CartView;
+import project.view.user.UserView;
 
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class InvoiceManagement {
@@ -26,9 +29,8 @@ public class InvoiceManagement {
     public InvoiceManagement() {
         System.out.println("-------------------------- Invoice Management --------------------------");
         System.out.println("1. Show Invoices");
-        System.out.println("2. Confirm Invoice ");
-//        System.out.println("3. Confirm Reject Request "+ "("+ invoiceController.getAllRejectInvoice().size() +")");
-        System.out.println("3. Confirm Reject Request");
+        System.out.println("2. Confirm Invoice " + "(" + invoiceController.getAllPendingInvoice().size() + ")");
+        System.out.println("3. Confirm Reject Request " + "(" + invoiceController.getAllRejectInvoice().size() + ")");
         System.out.println("4. Back To Menu");
         System.out.println("-------------------------- Invoice Management --------------------------");
         while (true) {
@@ -36,7 +38,7 @@ public class InvoiceManagement {
             int choice = Integer.parseInt(Config.scanner().nextLine());
             switch (choice) {
                 case 1:
-                    showInvoices();
+                    showInvoices(listInvoices);
                     backToMenu();
                     break;
                 case 2:
@@ -56,17 +58,17 @@ public class InvoiceManagement {
     }
 
     public void confirmInvoice() {
+        showInvoices(invoiceController.getAllPendingInvoice());
         System.out.println("Enter user ID: ");
         int idUser = Integer.parseInt(Config.scanner().nextLine());
-        if (userController.findById(idUser) != null) {
+        if (invoiceController.findById(idUser) != null) {
             System.out.println("Choose Invoice by ID: ");
             int idInvoice = Integer.parseInt(Config.scanner().nextLine());
-            InvoiceItem selectInvoice = invoiceController.getInvoiceItemById(idInvoice);
+            InvoiceItem selectInvoice = invoiceController.getPendingInvoice(idInvoice, idUser);
             if (selectInvoice == null) {
                 System.err.println("ID Not Found!");
                 tryAgainBackMenu();
             } else {
-//                displayInvoices(selectInvoice);
                 selectConfirmInvoice(selectInvoice);
                 if (invoiceController.updateInvoiceItem(selectInvoice, idUser)) {
                     System.out.println("Confirmed Success!");
@@ -107,24 +109,26 @@ public class InvoiceManagement {
         cartController.setProductQuantity(listCartItem);
     }
 
-    public void showInvoices() {
-        System.out.println("---------------------- Invoices ----------------------");
-        for (Invoice invoice:listInvoices) {
+    public void showInvoices(List<Invoice> invoiceList) {
+        System.out.println("------------------- Invoices --------------------");
+        Set<Invoice> setI = new LinkedHashSet<>(invoiceList);
+        for (Invoice invoice : setI) {
             displayUser(invoice.getUser());
-            displayInvoices(invoice.getInvoiceItems());
+            Set<InvoiceItem> set = new LinkedHashSet<>(invoice.getInvoiceItems());
+            for (InvoiceItem invoiceItem:set) {
+                displayInvoices(invoiceItem);
+            }
         }
-        System.out.println("---------------------- Invoices ----------------------");
+        System.out.println("------------------- Invoices --------------------");
     }
 
-    private static void displayInvoices(List<InvoiceItem> listInvoice) {
-        for (InvoiceItem invoiceItem : listInvoice) {
-            System.out.println("---------- Invoice" + " #" + invoiceItem.getInvoiceId() + " ----------");
-            new CartView().displayCart(invoiceItem.getCart());
-            System.out.println("Status: " + ((invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING) ? "PENDING" : (invoiceItem.isInvoiceStatus() == InvoiceStatus.TRUE) ? "ACCEPTED" : "DENIED"));
-            System.out.println("Reject Order: " + ((invoiceItem.getRejectStatus() == RejectStatus.PENDING) ? "PENDING" : (invoiceItem.getRejectStatus() == RejectStatus.TRUE) ? "ACCEPTED" : "DENIED"));
-            System.out.println("Reject Message: " + invoiceItem.getRejectMessage());
-            System.out.println("---------- Invoice" + " #" + invoiceItem.getInvoiceId() + " ----------");
-        }
+    private static void displayInvoices(InvoiceItem invoiceItem) {
+        System.out.println("---------- Invoice" + " #" + invoiceItem.getInvoiceId() + " ----------");
+        new CartView().displayCart(invoiceItem.getCart());
+        System.out.println("Status: " + ((invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING) ? "PENDING" : (invoiceItem.isInvoiceStatus() == InvoiceStatus.TRUE) ? "ACCEPTED" : "DENIED"));
+        System.out.println("Reject Order: " + ((invoiceItem.getRejectStatus() == RejectStatus.PENDING) ? "PENDING" : (invoiceItem.getRejectStatus() == RejectStatus.TRUE) ? "ACCEPTED" : "DENIED"));
+        System.out.println("Reject Message: " + invoiceItem.getRejectMessage());
+        System.out.println(" ");
     }
 
     private static void displayUser(User invoiceUser) {
@@ -138,12 +142,13 @@ public class InvoiceManagement {
     }
 
     public void confirmRejectRequest() {
+        showInvoices(invoiceController.getAllRejectInvoice());
         System.out.println("Enter user ID: ");
         int idUser = Integer.parseInt(Config.scanner().nextLine());
-        if (userController.findById(idUser) != null) {
+        if (invoiceController.findById(idUser) != null) {
             System.out.println("Choose Invoice by ID: ");
             int idInvoice = Integer.parseInt(Config.scanner().nextLine());
-            InvoiceItem selectInvoice = invoiceController.getInvoiceItemById(idInvoice);
+            InvoiceItem selectInvoice = invoiceController.getInvoiceItemById(idInvoice, idUser);
             if (selectInvoice == null) {
                 System.err.println("ID Not Found!");
                 tryAgainBackMenu();

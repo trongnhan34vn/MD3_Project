@@ -39,6 +39,9 @@ public class ProductView {
             System.out.println("Description: " + ((product.getDescription() == null) ? "<blank>" : product.getDescription()));
             System.out.println("Quantity: " + product.getQuantity());
             System.out.println("Price: " + Config.currencyVN.format(product.getPrice()));
+            if (product.getQuantity() == 0) {
+                product.setProductStatus(false);
+            }
             System.out.println("Status: " + (product.isProductStatus() ? "stocking" : "out of stock"));
             System.out.print("\n");
         }

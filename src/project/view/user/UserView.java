@@ -128,8 +128,17 @@ public class UserView {
         System.out.println("Enter current password: ");
         String password = Config.scanner().nextLine();
         if (password.equals(currentUser.getPassword())) {
-            System.out.println("Enter new password: ");
-            String newPass = Config.scanner().nextLine();
+            String newPass;
+            while(true) {
+                System.out.println("Enter new password: ");
+                newPass = Config.scanner().nextLine();
+                if(Validate.checkPassword(newPass)) {
+                    break;
+                }
+                else {
+                    System.err.println("Invalid Password! Try again!");
+                }
+            }
             User newUser = new User(user.getId(), user.getEmail(), newPass, user.getFullName(), user.getPhoneNumber(), user.getAddress(), user.getRole(), user.isStatus());
             updateInfoUser(newUser);
             System.out.println("Change password success!");

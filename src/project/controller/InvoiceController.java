@@ -19,7 +19,11 @@ public class InvoiceController {
         return invoiceService.findAllInvoiceItems();
     }
     public InvoiceItem getInvoiceItemById(int id) {
-        return invoiceService.getInvoiceItemById(id);
+        return invoiceService.getRejectInvoiceItemById(id);
+    }
+
+    public InvoiceItem getInvoiceItemById(int id, int idUser) {
+        return invoiceService.getRejectInvoiceItemById(id, idUser);
     }
     public boolean updateInvoiceItem(InvoiceItem invoiceItem, int id) {
         return invoiceService.updateInvoiceItem(invoiceItem, id);
@@ -29,5 +33,11 @@ public class InvoiceController {
     }
     public List<Invoice> getAllRejectInvoice() {
         return invoiceService.getAllRejectInvoice();
+    }
+    public InvoiceItem getPendingInvoice(int id, int idUser) {
+        return invoiceService.getPendingInvoiceItemById(id,idUser);
+    }
+    public List<Invoice> getAllPendingInvoice() {
+        return invoiceService.getAllPendingInvoice();
     }
 }

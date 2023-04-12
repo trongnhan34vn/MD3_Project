@@ -41,6 +41,8 @@ public class InvoiceItem implements Serializable {
     public InvoiceItem(int invoiceId, Cart cart) {
         this.invoiceId = invoiceId;
         this.cart = cart;
+        this.rejectStatus = RejectStatus.PENDING;
+        this.invoiceStatus = InvoiceStatus.PENDING;
     }
 
     public String getRejectMessage() {

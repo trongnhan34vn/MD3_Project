@@ -1,9 +1,12 @@
 package project.service.invoice;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import project.config.Config;
 import project.data.Path;
 import project.model.invoice.Invoice;
 import project.model.invoice.InvoiceItem;
+import project.model.invoice.InvoiceStatus;
+import project.model.invoice.RejectStatus;
 import project.model.user.User;
 import project.service.cart.CartServiceIMPL;
 import project.service.cart.ICartService;
@@ -92,7 +95,7 @@ public class InvoiceServiceIMPL implements IInvoiceService {
     }
 
     @Override
-    public InvoiceItem getInvoiceItemById(int id) {
+    public InvoiceItem getRejectInvoiceItemById(int id) {
         for (InvoiceItem invoiceItem : getCurrrentInvoice().getInvoiceItems()) {
             if (invoiceItem.getInvoiceId() == id) {
                 return invoiceItem;
@@ -100,6 +103,19 @@ public class InvoiceServiceIMPL implements IInvoiceService {
         }
         return null;
     }
+
+    @Override
+    public InvoiceItem getRejectInvoiceItemById(int id, int idUser) {
+        if (findById(idUser) != null) {
+            for (InvoiceItem invoiceItem : findById(idUser).getInvoiceItems()) {
+                if (invoiceItem.getInvoiceId() == id && invoiceItem.getRejectMessage() != null) {
+                    return invoiceItem;
+                }
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public boolean updateInvoiceItem(InvoiceItem invoiceItem, int userId) {
@@ -115,13 +131,81 @@ public class InvoiceServiceIMPL implements IInvoiceService {
         new Config<Invoice>().writeToFile(listInvoices, Path.INVOICE_PATH);
         return true;
     }
+    @Override
+    public List<Invoice> getAllPendingInvoice() {
+        List<Invoice> invoices = new ArrayList<>();
+        for (Invoice invoice:listInvoices) {
+            List<InvoiceItem> invoiceItems = invoice.getInvoiceItems();
+            for (InvoiceItem invoiceItem :invoiceItems) {
+                if (invoiceItem.isInvoiceStatus()==InvoiceStatus.PENDING) {
+                    List<InvoiceItem> listPending = new ArrayList<>();
+                    listPending.add(invoiceItem);
+                    Invoice existUser = isExistUserInOrder(invoice.getUser(),invoices);
+                    if(existUser == null) {
+                        invoices.add(new Invoice(invoice.getUser(),listPending));
+                    } else {
+                        int index = getIndexInvoiceByUser(invoice.getUser(), invoices);
+                        List<InvoiceItem> currentListInvoiceItem = invoices.get(index).getInvoiceItems();
+                        currentListInvoiceItem.add(invoiceItem);
+                        invoices.get(index).setInvoiceItems(currentListInvoiceItem);
+                    }
+                }
+            }
+        }
+        return invoices;
+    }
 
     @Override
     public List<Invoice> getAllRejectInvoice() {
-        List<Invoice> copyArr = new ArrayList<>(listInvoices);
-        for (Invoice invoice : copyArr) {
-            invoice.getInvoiceItems().removeIf(invoiceItem -> invoiceItem.getRejectMessage() == null);
+        List<Invoice> invoices = new ArrayList<>();
+        for (Invoice invoice : listInvoices) {
+            List<InvoiceItem> temp = invoice.getInvoiceItems();
+            for (InvoiceItem invoiceItem : temp) {
+                if (invoiceItem.getRejectMessage() != null) {
+                    List<InvoiceItem> listReject = new ArrayList<>();
+                    listReject.add(invoiceItem);
+                    Invoice checkExistUser = isExistUserInOrder(invoice.getUser(), invoices);
+                    if (checkExistUser == null) {
+                        invoices.add(new Invoice(invoice.getUser(), listReject));
+                    } else {
+                        int index = getIndexInvoiceByUser(invoice.getUser(), invoices);
+                        List<InvoiceItem> currentListInvoiceItem = invoices.get(index).getInvoiceItems();
+                        currentListInvoiceItem.add(invoiceItem);
+                        invoices.get(index).setInvoiceItems(currentListInvoiceItem);
+                    }
+                }
+            }
         }
-        return copyArr;
+        return invoices;
+    }
+
+    private int getIndexInvoiceByUser(User user, List<Invoice> invoices) {
+        for (Invoice invoice : invoices) {
+            if (invoice.getUser().getId() == user.getId()) {
+                return invoices.indexOf(invoice);
+            }
+        }
+        return -1;
+    }
+
+    private Invoice isExistUserInOrder(User user, List<Invoice> invoices) {
+        for (Invoice invoice : invoices) {
+            if (invoice.getUser().getId() == user.getId()) {
+                return invoice;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public InvoiceItem getPendingInvoiceItemById(int id, int idUser) {
+        if (findById(idUser) != null) {
+            for (InvoiceItem invoiceItem : findById(idUser).getInvoiceItems()) {
+                if (invoiceItem.getInvoiceId() == id && invoiceItem.isInvoiceStatus() == InvoiceStatus.PENDING) {
+                    return invoiceItem;
+                }
+            }
+        }
+        return null;
     }
 }

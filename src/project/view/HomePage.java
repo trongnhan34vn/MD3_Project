@@ -1,6 +1,7 @@
 package project.view;
 
 import project.config.Config;
+import project.config.Validate;
 import project.view.user.ProductView;
 
 public class HomePage {
